@@ -47,21 +47,25 @@ def authenticate():
         if token:
             user = users.find_one({'mac': mac})
             user = users.find_one({'token': token})
+            # return whether token is valid or not
         else:
             user = users.find_one({'email': email})
         if not user:  # user DNE
             hashed_password = get_hashed_password(password)
             # hash password -> insert into mongodb - Done
             # create token -> create a random authentification token that doesn't exist already 
-            while(token.find_one({'token': token})):
-                secrets.token_urlsafe() 
-            # create new user -> 
-            user.insert_1
+            new_token = secrets.token_urlsafe() 
+            while tokens.find_one({'token': new_token}):
+                new_token = secrets.token_urlsafe()
+            # create new user
+            
         else:
-            check_password(password, user['password'])
-            pass
-            # return new token
-
+            if check_password(password, user['password']):
+                pass
+                new_token = secrets.token_urlsafe() 
+                while(tokens.find_one({'token': new_token})):
+                    new_token = secrets.token_urlsafe()
+                return new_token
             # check if exists
             # check if correct
 
@@ -69,6 +73,7 @@ def authenticate():
             # last login should not be past 6 months
             # db should be cleaned every month or day at lowest peak
             # how to get peak?
+    return 'False'
 
 
 # IGNORE for now
