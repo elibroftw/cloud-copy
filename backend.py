@@ -42,8 +42,8 @@ def authenticate():
     # TODO: if not an email, forget password won't work
     # TODO: what if there is a space
     if request.method == 'POST':
-        token, mac = request.args.get('token'), request.args.get('mac')
-        email, password = request.args.get('email'), request.args.get('password')
+        token, mac = request.values.get('token'), request.values.get('mac')
+        email, password = request.values.get('email'), request.values.get('password')
         if token:
             user = users.find_one({'mac': mac})
             user = users.find_one({'token': token})
