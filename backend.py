@@ -51,8 +51,9 @@ def authenticate():
             user = users.find_one({'email': email})
         if not user:  # user DNE
             hashed_password = get_hashed_password(password)
-            # create token
-            # create new user
+            # hash password -> insert into mongodb
+            # create token -> create a random authentication token that does not exist already
+            # create new user -> inserts user into the pymongo collection
             # with the devices having a (mac, token)
         else:
             check_password(password, user['password'])
