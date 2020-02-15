@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 from flask import Flask, request, jsonify
 from flask_compress import Compress
-from werkzeug.middleware.proxy_fix import ProxyFix
-from environs import Env
+# from werkzeug.middleware.proxy_fix import ProxyFix
+from dotenv import load_dotenv
 from pymongo import MongoClient
 import bcrypt
-import uuid
+# import uuid
 import os
 import secrets
 from datetime import datetime
 
 
-Env().read_env()  # read from .env
-DEVELOPMENT_SETTING = os.environ.get('DEBUG', '')
+load_dotenv()  # read from .env
+DEVELOPMENT_SETTING = os.getenv('DEBUG')
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 if DEVELOPMENT_SETTING else 604800
 # app.wsgi_app = ProxyFix(app.wsgi_app, 1)
@@ -81,8 +81,8 @@ def authenticate():
     return 'false'
 
 
-@app.route('/share-copy/')
-def share_copy(methods=['POST']):
+@app.route('/share-copy/', methods=['POST'])
+def share_copy():
     if request.method == 'POST':
         token, contents = request.values.get('token'), request.values.get('contents')
         user = tokens.find_one({'token': token})
@@ -93,8 +93,8 @@ def share_copy(methods=['POST']):
     return 'false'
 
 
-@app.route('/newest-copy/')
-def new_copies(methods=['GET']):
+@app.route('/newest-copy/', methods=['GET'])
+def new_copies():
     if request.method == 'GET':
         token = request.args.get('token')
         user = tokens.find_one({'token': token})
@@ -109,6 +109,5 @@ def new_copies(methods=['GET']):
 
 
 # TODO: forgot password
-
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

@@ -1,6 +1,6 @@
 import PySimpleGUI as sg
 import sys
-import uuid
+# import uuid
 import json
 import requests
 import time
@@ -68,19 +68,20 @@ def decrypt(key, encrypted: bytes) -> bytes:
 
 
 def create_key(provided_password: str) -> bytes:
-    password = provided_password.encode()  # Convert to type bytes
+    password_b = provided_password.encode()  # Convert to type bytes
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
         length=32,
         salt=b'',
         iterations=100000,
         backend=default_backend())
-    key = base64.urlsafe_b64encode(kdf.derive(password))  # Can only use kdf once
+    key = base64.urlsafe_b64encode(kdf.derive(password_b))  # Can only use kdf once
     with open('.key', 'wb') as f: f.write(key)
     return key
 
 
-# using the request module try to authenitcate token
+# try to authenticate token
+# TODO: what if no internet?
 if os.path.exists('.token'):
     try:
         with open('.token') as f:
@@ -130,5 +131,6 @@ while not logged_in:
     # print(event)
 window.close()
 with open('.key', 'rb') as f:
+    # noinspection PyUnboundLocalVariable
     start_service(f.read(), token)
 

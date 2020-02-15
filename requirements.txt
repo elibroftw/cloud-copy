@@ -4,9 +4,10 @@ flask-compress
 pymongo
 cryptography
 pyperclip
-environs
+python-dotenv
 passlib
 bcrypt
 gunicorn
+requests
 PySimpleGUI
 flask_socketio
