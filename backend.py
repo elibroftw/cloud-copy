@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from flask import Flask, render_template, request, redirect, send_from_directory, send_file, url_for, jsonify
+from flask import Flask, request, jsonify
 from flask_compress import Compress
 from werkzeug.middleware.proxy_fix import ProxyFix
 from environs import Env
@@ -15,7 +15,7 @@ Env().read_env()  # read from .env
 DEVELOPMENT_SETTING = os.environ.get('DEBUG', '')
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 if DEVELOPMENT_SETTING else 604800
-app.wsgi_app = ProxyFix(app.wsgi_app, 1)
+# app.wsgi_app = ProxyFix(app.wsgi_app, 1)
 Compress(app)
 
 client = MongoClient()
