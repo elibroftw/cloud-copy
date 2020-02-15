@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_compress import Compress
 from werkzeug.middleware.proxy_fix import ProxyFix
 from dotenv import load_dotenv
@@ -42,7 +42,7 @@ def check_password(plain_text_password: str, hashed_password):
 
 @app.route('/')
 def home():
-    return 'Everything is up and running'
+    return render_template('home.html')
 
 
 @app.route('/authenticate/', methods=['POST'])
