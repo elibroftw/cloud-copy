@@ -18,6 +18,7 @@ Compress(app)
 client = MongoClient()
 db = client.cloud_copy
 users = db.users
+tokens = db.tokens
 # user structure
 sample_user = {'email': 'cool_guy123@cool_domain.com',
                'devices': {'MAC': {'token': 'some-token',
@@ -52,6 +53,7 @@ def authenticate():
             hashed_password = get_hashed_password(password)
             # hash password -> insert into mongodb - Done
             # create token -> create a random authentification token that doesn't exist already 
+            while
             secrets.token_urlsafe() 
             # create new user
         else:
