@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, send_from_directory, send_file, url_for
+from flask import Flask, render_template, request, redirect, send_from_directory, send_file, url_for, jsonify
 from flask_compress import Compress
 from werkzeug.middleware.proxy_fix import ProxyFix
 from environs import Env
@@ -8,6 +8,7 @@ import uuid
 import os
 import secrets
 from datetime import datetime
+
 
 Env().read_env()  # read from .env
 DEVELOPMENT_SETTING = os.environ.get('DEBUG', '')
@@ -69,6 +70,33 @@ def authenticate():
                 user_tokens = user['tokens'] + [new_token]
                 users.update_one({'email': email}, {'$set': {'tokens': user_tokens}})
                 return new_token
+    return 'false'
+
+
+@app.route('/share-copy/')
+def share_copy(methods=['POST']):
+    if request.method == 'POST':
+        token, contents = request.values.get('token'), request.values.get('contents')
+        user = tokens.find_one({'token': token})
+        if user:
+            email = user['email']
+            users.update_one({'email': email}, {'$set': {'current_copy': contents, 'updated': datetime.today()}})
+            return 'true'
+    return 'false'
+
+
+@app.route('/newest-copy/')
+def new_copies(methods=['GET']):
+    if request.method == 'GET':
+        token = request.args.get('token')
+        user = tokens.find_one({'token': token})
+        if user:
+            email = user['email']
+            user = users.find_one({'email': email})
+            current_copy = user.get('current_copy')
+            timestamp = user.get('updated')
+            if current_copy:
+                return jsonify({'current_copy': current_copy, 'timestamp': timestamp})
     return 'false'
 
 

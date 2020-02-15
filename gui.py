@@ -1,10 +1,12 @@
 import PySimpleGUI as sg
 import sys
 import uuid
+import json
 import requests
 import time
 import base64
 import os
+from datetime import datetime
 from cryptography.fernet import Fernet
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
@@ -27,11 +29,26 @@ layout = [[sg.Text('Log into Cloud Copy', font=('Helvetica', 18))],
 logged_in = False 
 
 
-def start_service(key):
+def start_service(key, token):
     current_text = pyperclip.paste()
+    last_update = datetime.today()
     while True:
-        # use pyperclip
-        pass
+        try:
+            new_copy = pyperclip.paste()
+            if current_text != new_copy:
+                requests.post(BASE_URL + 'share-copy/', {'token': token, 'contents': new_copy})
+            else:
+                resp = requests.get(BASE_URL + f'newest-copy/?token={token}').text
+                if resp != 'false':
+                    resp = json.loads(resp)
+                    new_copy, timestamp = resp['current_copy'], resp['timestmap']
+                    if new_copy != current_text:
+                        latest_copy_date = datetime.strptime(timestamp)
+                        if last_update < latest_copy_date:
+                            current_text = new_copy
+                            pyperclip.copy(new_copy)
+            time.sleep(2)
+        except requests.RequestException: time.sleep(60)  # wait 60 seconds before trying again
     # For every copied data, send the token with the data
     # only if no sockets ^
     # Make sure to handle no wifi
@@ -63,18 +80,19 @@ def create_key(provided_password: str) -> bytes:
 
 
 # using the request module try to authenitcate token
-with open('.token') as f:
-    email, token = f.read().split('\n')
-    url = BASE_URL + 'authentic/'
-    x = requests.post(url, {'email': email, 'token': token}).text
-if x != 'invalid token':
-    logged_in = True
-    if x != token:
-        with open('.token', 'w') as f:
-            f.write(email + '\n' + token)
+if os.path.exists('.token'):
+    with open('.token') as f:
+        email, token = f.read().split('\n')
+        url = BASE_URL + 'authentic/'
+        x = requests.post(url, {'email': email, 'token': token}).text
+    if x != 'invalid token':
+        logged_in = True
+        if x != token:
+            with open('.token', 'w') as f:
+                f.write(email + '\n' + token)
 
 
-if not logged_in: window = sg.Window('Cloud Copy - Universal Clipboard', layout, return_keyboard_events=True)
+window = sg.Window('Cloud Copy - Universal Clipboard', layout, return_keyboard_events=True)
 while not logged_in:
     event, values = window.read()
     if event in (None, 'Escape:27'):  # if user closes window or clicks cancel
@@ -100,7 +118,8 @@ while not logged_in:
             else:
                 window['log_in_error'].Update(visible=False)
                 window['forgot_password'].Update(value='Log in successful')
-                with open('.token', 'w') as f: f.write(email + '\n' + resp)
+                token = resp
+                with open('.token', 'w') as f: f.write(email + '\n' + token)
                 create_key(password)
                 logged_in = True
                 time.sleep(0.5)
@@ -108,5 +127,5 @@ while not logged_in:
     # print(event)
 window.close()
 with open('.key', 'rb') as f:
-    start_service(f.read())
+    start_service(f.read(), token)
 
