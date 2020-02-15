@@ -4,3 +4,4 @@ pymongo
 passlib
 bcrypt
 gunicorn
+PySimpleGUI

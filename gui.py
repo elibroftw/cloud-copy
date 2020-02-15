@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 import sys
 import uuid
+import requests
 
 sg.theme('DarkBlack')
 BASE_URL = '167.99.191.206'
@@ -14,7 +15,24 @@ layout = [[sg.Text('Log into Cloud Copy', font=('Helvetica', 18))],
           [sg.Button('Log in or Sign up', key='log_in', font=('Arial', 11)),
            sg.Text('forgot password', font=('Arial', 11), enable_events=True, key='forgot_password')]]
 
-logged_in = False
+logged_in = False 
+# using the request module try to authenitcate token
+with open('.token') as f:
+    email, token = f.read().split('\n')
+    url = BASE_URL + 'authentic/'
+    x = requests.post(url, {'email': email, 'token': token}).text
+if x != 'invalid token':
+    logged_in = True
+    if x != token:
+        with open('.token', 'w') as f:
+            f.write(email + '\n' + token)
+
+
+
+
+
+
+
 # Create the Window
 window = sg.Window('Cloud Copy - Universal Clipboard', layout, return_keyboard_events=True)
 
