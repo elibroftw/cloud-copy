@@ -37,9 +37,10 @@ def authenticate():
             user = users.find({'email': email})
         if not user:  # user DNE
             password = sha256_crypt.encrypt(password)
-            # hash password
-            # create token
-            # create new user
+            
+            # hash password -> insert into mongodb
+            # create token -> create a random authentication token that does not exist already
+            # create new user -> inserts user into the pymongo collection
         else:
             sha256_crypt.verify(password, user['password'])
             pass
