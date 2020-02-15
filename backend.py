@@ -27,7 +27,7 @@ sample_user = {'email': 'cool_guy123@cool_domain.com',
                'tokens': {'token-value': 'MAC'}}
 
 
-def get_hashed_password(plain_text_password: str):
+def hash_password(plain_text_password: str):
     # Hash a password for the first time
     #   (Using bcrypt, the salt is saved into the hash itself)
     return bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
@@ -52,7 +52,7 @@ def authenticate():
         else:
             user = users.find_one({'email': email})
         if not user:  # user DNE
-            hashed_password = get_hashed_password(password)
+            hashed_password = hash_password(password)
             # hash password -> insert into mongodb - Done
             # create token -> create a random authentification token that doesn't exist already 
             new_token = secrets.token_urlsafe() 
@@ -61,9 +61,6 @@ def authenticate():
             
             # create new user
             new_user = {'email': email, 'password': hashed_password, 'token': new_token}
-
-
-
         else:
             if check_password(password, user['password']):
                 new_token = secrets.token_urlsafe() 
