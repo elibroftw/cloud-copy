@@ -40,6 +40,11 @@ def check_password(plain_text_password: str, hashed_password):
     return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_password)
 
 
+@app.errorhandler(404)
+def page_not_found(_):
+    return render_template('home.html'), 404
+
+
 @app.route('/')
 def home():
     return render_template('home.html')
