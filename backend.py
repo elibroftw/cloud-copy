@@ -7,6 +7,7 @@ import bcrypt
 import uuid
 import os
 import secrets
+from datetime import datetime
 
 Env().read_env()  # read from .env
 DEVELOPMENT_SETTING = os.environ.get('DEBUG', '')
@@ -45,8 +46,8 @@ def authenticate():
         token, mac = request.values.get('token'), request.values.get('mac')
         email, password = request.values.get('email'), request.values.get('password')
         if token:
-            user = users.find_one({'token': token})
-            if user: return 'True'
+            token_obj = tokens.find_one({'token': token})
+            if token_obj: return 'True'
             return 'Invalid Token'
         else:
             user = users.find_one({'email': email})
@@ -60,10 +61,12 @@ def authenticate():
             # create new user
         else:
             if check_password(password, user['password']):
-                pass
                 new_token = secrets.token_urlsafe() 
                 while(tokens.find_one({'token': new_token})):
                     new_token = secrets.token_urlsafe()
+                tokens.insert_one({'token': new_token, 'email': email})
+                user_tokens = user['tokens'].append(new_token)
+                users.update_one({'email': email}, {'$set': {'tokens': user_tokens}})
                 return new_token
             # check if exists
             # check if correct
