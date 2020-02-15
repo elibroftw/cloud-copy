@@ -7,7 +7,7 @@ import bcrypt
 import uuid
 import os
 import secrets
-import sockets
+from datetime import datetime
 
 Env().read_env()  # read from .env
 DEVELOPMENT_SETTING = os.environ.get('DEBUG', '')
@@ -15,11 +15,6 @@ app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 if DEVELOPMENT_SETTING else 604800
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=1)
 Compress(app)
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect(('0.0.0.0', 8080))
-sock.send("Test test 123")
-sock.recv(4096)
-sock.close()
 
 client = MongoClient()
 db = client.cloud_copy
@@ -32,7 +27,7 @@ sample_user = {'email': 'cool_guy123@cool_domain.com',
                'tokens': {'token-value': 'MAC'}}
 
 
-def get_hashed_password(plain_text_password: str):
+def hash_password(plain_text_password: str):
     # Hash a password for the first time
     #   (Using bcrypt, the salt is saved into the hash itself)
     return bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
@@ -42,10 +37,6 @@ def check_password(plain_text_password: str, hashed_password):
     # Check hashed password. Using bcrypt, the salt is saved into the hash itself
     return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_password)
 
-
-def create_socket_connection(client, sample_user): pass
-
-
 @app.route('/authenticate/', methods=['POST'])
 def authenticate():
     # TODO: if not an email, forget password won't work
@@ -54,69 +45,31 @@ def authenticate():
         token, mac = request.values.get('token'), request.values.get('mac')
         email, password = request.values.get('email'), request.values.get('password')
         if token:
-            user = users.find_one({'token': token})
-            if user: return 'True'
-            return 'Invalid Token'
-        else:
-            user = users.find_one({'email': email})
+            token_obj = tokens.find_one({'token': token})
+            if not token_obj: return 'Invalid Token'
+            # if token is really old (6 months+) create a new one
+            return token_obj['token']
+        user = users.find_one({'email': email})
         if not user:  # user DNE
-            hashed_password = get_hashed_password(password)
-            # hash password -> insert into mongodb - Done
-            # create token -> create a random authentification token that doesn't exist already 
+            hashed_password = hash_password(password)
             new_token = secrets.token_urlsafe() 
             while tokens.find_one({'token': new_token}):
                 new_token = secrets.token_urlsafe()
             
-            # create new user
-            new_user = {'email': email, 'password': hashed_password, 'token': new_token}
-
-
-
-        else:
+            tokens.insert_one({'token': new_token, 'email': email, 'created': datetime.today()})
+            new_user = {'email': email, 'password': hashed_password, 'tokens': [new_token]}
+            users.insert_one(new_user)
+            return new_token
+        else:  # user does exist
             if check_password(password, user['password']):
-                pass
-                new_token = secrets.token_urlsafe() 
-                while(tokens.find_one({'token': new_token})):
+                new_token = secrets.token_urlsafe()
+                while tokens.find_one({'token': new_token}):
                     new_token = secrets.token_urlsafe()
+                tokens.insert_one({'token': new_token, 'email': email, 'created': datetime.today()})
+                user_tokens = user['tokens'] + [new_token]
+                users.update_one({'email': email}, {'$set': {'tokens': user_tokens}})
                 return new_token
-            # check if exists
-            # check if correct
-
-            # blind spots
-            # last login should not be past 6 months
-            # db should be cleaned every month or day at lowest peak
-            # how to get peak?
     return 'False'
-
-
-# IGNORE for now
-@app.route('/connect/', methods=['POST'])
-def connect():
-    if request.method == 'POST':
-        token, mac = request.args.get('token'), request.args.get('mac')
-        email, password = request.args.get('email'), request.args.get('password')
-        if token:
-            user = users.find({'mac': mac})
-            user = users.find({'token': token})
-        else:
-            user = users.find({'email': email})
-        if not user:  # user DNE
-            password = sha256_crypt.encrypt(password)
-            # hash password
-            # create token
-            # create new user
-        else:
-            sha256_crypt.verify(password, user['password'])
-            pass
-            # return new token of 128-bit
-
-            # check if exists
-            # check if correct
-
-            # blind spots
-            # last login should not be past 6 months
-            # db should be cleaned every month or day at lowest peak
-            # how to get peak?
 
 
 if __name__ == '__main__':
