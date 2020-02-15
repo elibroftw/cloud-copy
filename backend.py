@@ -17,6 +17,8 @@ Compress(app)
 client = MongoClient()
 db = client.cloud_copy
 users = db.users
+tokens = db.tokens
+
 # user structure
 sample_user = {'email': 'cool_guy123@cool_domain.com',
                'devices': {'MAC': {'token': 'some-token',
@@ -43,15 +45,15 @@ def authenticate():
         token, mac = request.args.get('token'), request.args.get('mac')
         email, password = request.args.get('email'), request.args.get('password')
         if token:
-            user = users.find({'mac': mac})
-            user = users.find({'token': token})
+            user = users.find_one({'mac': mac})
+            user = users.find_one({'token': token})
         else:
-            user = users.find({'email': email})
+            user = users.find_one({'email': email})
         if not user:  # user DNE
             hashed_password = get_hashed_password(password)
-            # hash password
             # create token
             # create new user
+            # with the devices having a (mac, token)
         else:
             check_password(password, user['password'])
             pass
