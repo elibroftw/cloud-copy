@@ -47,8 +47,10 @@ def authenticate():
         email, password = request.values.get('email'), request.values.get('password')
         if token:
             token_obj = tokens.find_one({'token': token})
-            if token_obj: return 'True'
-            return 'Invalid Token'
+            if not token_obj: return 'Invalid Token'
+            # if token is really old (6 months+) create a new one
+            return token_obj
+            
         else:
             user = users.find_one({'email': email})
         if not user:  # user DNE
@@ -59,15 +61,16 @@ def authenticate():
             while tokens.find_one({'token': new_token}):
                 new_token = secrets.token_urlsafe()
             
-            # create new user
+            tokens.insert_one({'token': new_token, 'email': email, 'created': datetime.today()})
             new_user = {'email': email, 'password': hashed_password, 'tokens': [new_token]}
             users.insert_one(new_user)
+            return new_token
         else:
             if check_password(password, user['password']):
-                new_token = secrets.token_urlsafe() 
+                new_token = secrets.token_urlsafe()
                 while tokens.find_one({'token': new_token}):
                     new_token = secrets.token_urlsafe()
-                tokens.insert_one({'token': new_token, 'email': email})
+                tokens.insert_one({'token': new_token, 'email': email, 'created': datetime.today()})
                 user_tokens = user['tokens'].append(new_token)
                 users.update_one({'email': email}, {'$set': {'tokens': user_tokens}})
                 return new_token
