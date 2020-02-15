@@ -46,8 +46,8 @@ def start_service(key, token):
                 if resp != 'false':
                     resp = json.loads(resp)
                     new_copy, timestamp = decrypt(key, resp['current_copy'].encode()).decode(), resp['timestamp']
-                    timestamp = datetime.strptime(timestamp, '%Y-%m-%d %I:%M:%S.%f')
-                    if new_copy != current_text and last_update < timestamp:
+                    # timestamp = datetime.strptime(timestamp, '%Y-%m-%d %I:%M:%S.%f')
+                    # if new_copy != current_text and last_update < timestamp:
                     if new_copy != current_text:
                         last_update = timestamp
                         current_text = new_copy

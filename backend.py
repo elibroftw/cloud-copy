@@ -87,7 +87,7 @@ def share_copy():
         user = tokens.find_one({'token': token})
         if user:
             email = user['email']
-            users.update_one({'email': email}, {'$set': {'current_copy': contents, 'updated': datetime.now()}})
+            users.update_one({'email': email}, {'$set': {'current_copy': contents, 'updated': str(datetime.now())}})
             return 'true'
     return 'false'
 
