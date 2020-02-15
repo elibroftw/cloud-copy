@@ -14,7 +14,7 @@ Env().read_env()  # read from .env
 DEVELOPMENT_SETTING = os.environ.get('DEBUG', '')
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 if DEVELOPMENT_SETTING else 604800
-app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=1)
+app.wsgi_app = ProxyFix(app.wsgi_app, 1)
 Compress(app)
 
 client = MongoClient()

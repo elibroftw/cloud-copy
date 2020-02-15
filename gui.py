@@ -14,7 +14,7 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import pyperclip
 
 sg.theme('DarkBlack')
-# BASE_URL = 'http://167.99.191.206/'
+# BASE_URL = 'http://167.99.191.206:5000/'
 BASE_URL = 'http://127.0.0.1:5000/' 
 
 layout = [[sg.Text('Log into Cloud Copy', font=('Helvetica', 18))],
