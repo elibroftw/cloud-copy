@@ -10,8 +10,8 @@ from datetime import datetime
 from cryptography.fernet import Fernet
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkd2 import PBKDF2HMAC
-import pyperclipf
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+import pyperclip
 
 sg.theme('DarkBlack')
 BASE_URL = 'http://167.99.191.206/'
