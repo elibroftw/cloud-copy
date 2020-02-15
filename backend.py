@@ -7,6 +7,7 @@ import bcrypt
 import uuid
 import os
 import secrets
+import sockets
 
 Env().read_env()  # read from .env
 DEVELOPMENT_SETTING = os.environ.get('DEBUG', '')
@@ -14,6 +15,11 @@ app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 if DEVELOPMENT_SETTING else 604800
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=1)
 Compress(app)
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect(('0.0.0.0', 8080))
+sock.send("Test test 123")
+sock.recv(4096)
+sock.close()
 
 client = MongoClient()
 db = client.cloud_copy
@@ -35,6 +41,9 @@ def get_hashed_password(plain_text_password: str):
 def check_password(plain_text_password: str, hashed_password):
     # Check hashed password. Using bcrypt, the salt is saved into the hash itself
     return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_password)
+
+
+def create_socket_connection(client, sample_user): pass
 
 
 @app.route('/authenticate/', methods=['POST'])
