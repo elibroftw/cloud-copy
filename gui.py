@@ -46,6 +46,7 @@ while not logged_in:
                 window['log_in_error'].Update(visible=True)
                 window['forgot_password'].Update(value='forgot password')
             else:
+                window['log_in_error'].Update(visible=False)
                 window['forgot_password'].Update(value='Log in successful')
                 with open('.token', 'w') as f:
                     f.write(resp)
@@ -53,10 +54,6 @@ while not logged_in:
                 time.sleep(0.5)
             # also send PC Name?
             # authenticate user
-            # if authenticated:
-            #     # do stuff
-            # else: window['log_in_error'].Update(visible=True)
-            #     logged_in = True
             
     # print(event)
 window.close()
