@@ -71,7 +71,7 @@ def authenticate():
                 while tokens.find_one({'token': new_token}):
                     new_token = secrets.token_urlsafe()
                 tokens.insert_one({'token': new_token, 'email': email, 'created': datetime.today()})
-                user_tokens = user['tokens'].append(new_token)
+                user_tokens = user['tokens'] + [new_token]
                 users.update_one({'email': email}, {'$set': {'tokens': user_tokens}})
                 return new_token
             # check if exists
