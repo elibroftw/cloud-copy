@@ -81,15 +81,17 @@ def create_key(provided_password: str) -> bytes:
 
 # using the request module try to authenitcate token
 if os.path.exists('.token'):
-    with open('.token') as f:
-        email, token = f.read().split('\n')
-        url = BASE_URL + 'authentic/'
-        x = requests.post(url, {'email': email, 'token': token}).text
-    if x != 'invalid token':
-        logged_in = True
-        if x != token:
-            with open('.token', 'w') as f:
-                f.write(email + '\n' + token)
+    try:
+        with open('.token') as f:
+            email, token = f.read().split('\n')
+            url = BASE_URL + 'authentic/'
+            x = requests.post(url, {'email': email, 'token': token}).text
+        if x != 'invalid token':
+            logged_in = True
+            if x != token:
+                with open('.token', 'w') as f:
+                    f.write(email + '\n' + token)
+    except ValueError: os.remove('.token')
 
 
 window = sg.Window('Cloud Copy - Universal Clipboard', layout, return_keyboard_events=True)

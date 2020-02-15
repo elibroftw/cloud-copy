@@ -58,7 +58,7 @@ def authenticate():
             # if token is really old (6 months+) create a new one
             return token_obj['token']
         user = users.find_one({'email': email})
-        if not user:  # user DNE
+        if not user:  # user DNE; create new user
             hashed_password = hash_password(password)
             new_token = secrets.token_urlsafe() 
             while tokens.find_one({'token': new_token}):
@@ -67,6 +67,7 @@ def authenticate():
             tokens.insert_one({'token': new_token, 'email': email, 'created': datetime.today()})
             new_user = {'email': email, 'password': hashed_password, 'tokens': [new_token]}
             users.insert_one(new_user)
+            # TODO: send an email to welcome user to Cloud Copy upon sign up
             return new_token
         else:  # user does exist
             if check_password(password, user['password']):
@@ -111,4 +112,3 @@ def new_copies(methods=['GET']):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-    
