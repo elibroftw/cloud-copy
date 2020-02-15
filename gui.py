@@ -40,15 +40,14 @@ def start_service(key, token):
                 r = requests.post(BASE_URL + 'share-copy/',
                                   {'token': token, 'contents': encrypt(key, new_copy.encode())})
                 print(r.text)
-                # current_text = new_copy
+                current_text = new_copy
             else:
                 resp = requests.get(BASE_URL + f'newest-copy/?token={token}').text
                 if resp != 'false':
                     resp = json.loads(resp)
                     new_copy, timestamp = decrypt(key, resp['current_copy'].encode()).decode(), resp['timestamp']
-                    # timestamp = datetime.strptime(timestamp, '%Y-%m-%d %I:%M:%S.%f')
-                    # if new_copy != current_text and last_update < timestamp:
-                    if new_copy != current_text:
+                    timestamp = datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S.%f')
+                    if new_copy != current_text and last_update < timestamp:
                         last_update = timestamp
                         current_text = new_copy
                         pyperclip.copy(new_copy)
