@@ -58,7 +58,12 @@ def authenticate():
             new_token = secrets.token_urlsafe() 
             while tokens.find_one({'token': new_token}):
                 new_token = secrets.token_urlsafe()
+            
             # create new user
+            new_user = {'email': email, 'password': hashed_password, 'token': new_token}
+
+
+
         else:
             if check_password(password, user['password']):
                 new_token = secrets.token_urlsafe() 
