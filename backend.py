@@ -29,8 +29,7 @@ def authenticate():
     # TODO: what if there is a space
     if request.method == 'POST':
         token, mac = request.args.get('token'), request.args.get('mac')
-        email, password = request.args.get(
-            'email'), request.args.get('password')
+        email, password = request.args.get('email'), request.args.get('password')
         if token:
             user = users.find({'mac': mac})
             user = users.find({'token': token})
