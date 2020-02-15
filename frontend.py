@@ -23,7 +23,7 @@ def create_key(provided_password: str) -> bytes:
         backend=default_backend())
     key = base64.urlsafe_b64encode(kdf.derive(password))  # Can only use kdf once
     return key
-    # with open('key.key', 'wb') as f: f.write(key)
+    # with open('.key', 'wb') as f: f.write(key)
 
 
 def start_service(): pass

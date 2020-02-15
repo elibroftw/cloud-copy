@@ -37,7 +37,6 @@ def check_password(plain_text_password: str, hashed_password):
     # Check hashed password. Using bcrypt, the salt is saved into the hash itself
     return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_password)
 
-
 @app.route('/authenticate/', methods=['POST'])
 def authenticate():
     # TODO: if not an email, forget password won't work
@@ -47,39 +46,33 @@ def authenticate():
         email, password = request.values.get('email'), request.values.get('password')
         if token:
             token_obj = tokens.find_one({'token': token})
-            if token_obj: return 'True'
-            return 'Invalid Token'
-        else:
-            user = users.find_one({'email': email})
+            if not token_obj: return 'invalid token'
+            # if token is really old (6 months+) create a new one
+            return token_obj['token']
+        user = users.find_one({'email': email})
         if not user:  # user DNE
             hashed_password = hash_password(password)
-            # hash password -> insert into mongodb - Done
-            # create token -> create a random authentification token that doesn't exist already 
             new_token = secrets.token_urlsafe() 
             while tokens.find_one({'token': new_token}):
                 new_token = secrets.token_urlsafe()
             
-            # create new user
+            tokens.insert_one({'token': new_token, 'email': email, 'created': datetime.today()})
             new_user = {'email': email, 'password': hashed_password, 'tokens': [new_token]}
             users.insert_one(new_user)
-        else:
+            return new_token
+        else:  # user does exist
             if check_password(password, user['password']):
-                new_token = secrets.token_urlsafe() 
+                new_token = secrets.token_urlsafe()
                 while tokens.find_one({'token': new_token}):
                     new_token = secrets.token_urlsafe()
-                tokens.insert_one({'token': new_token, 'email': email})
-                user_tokens = user['tokens'].append(new_token)
+                tokens.insert_one({'token': new_token, 'email': email, 'created': datetime.today()})
+                user_tokens = user['tokens'] + [new_token]
                 users.update_one({'email': email}, {'$set': {'tokens': user_tokens}})
                 return new_token
-            # check if exists
-            # check if correct
+    return 'false'
 
-            # blind spots
-            # last login should not be past 6 months
-            # db should be cleaned every month or day at lowest peak
-            # how to get peak?
-    return 'False'
 
+# TODO: forgot password
 
 if __name__ == '__main__':
     assert os.path.exists('.env')
