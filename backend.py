@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from flask import Flask, render_template, request, redirect, send_from_directory, send_file, url_for, jsonify
 from flask_compress import Compress
 from werkzeug.middleware.proxy_fix import ProxyFix
