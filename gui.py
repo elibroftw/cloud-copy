@@ -17,14 +17,14 @@ sg.theme('DarkBlack')
 BASE_URL = 'http://167.99.191.206/'
 # BASE_URL = 'http://127.0.0.1:5000/'  # DEBUGGING PURPOSES
 
-layout = [[sg.Text('CloudCopy log in / sign up', font=('Helvetica', 18))],
-          [sg.Text('Email', font=('Arial', 11)), sg.InputText(font=('Arial', 11), key='email')],
+layout = [[sg.Text('CloudCopy Log in / Sign up', font=('Helvetica', 17))],
+          [sg.Text('Email', pad=((4, 35), (4, 4)), font=('Arial', 11)), sg.InputText(font=('Arial', 11), key='email')],
           [sg.Text('Password', font=('Arial', 11)),
            sg.InputText(password_char='*', font=('Arial', 11), key='password')],
           [sg.Text('Incorrect email or password', key='log_in_error', size=(30, 1), text_color='#ff425c',
                    font=('Arial', 11), visible=False)],
           [sg.Button('Log in or Sign up', key='log_in', font=('Arial', 11)),
-           sg.Text('forgot password', font=('Arial', 11), enable_events=True, key='forgot_password')]]
+           sg.Text('forgot password', font=('Arial', 11), enable_events=True, key='forgot_password', size=(17, 1))]]
 
 logged_in = False 
 
@@ -113,6 +113,7 @@ while not logged_in:
         else:
             window['log_in_error'].Update(visible=False)
             window['forgot_password'].Update(value='authenticating...')
+            window.Read(timeout=1)
             # mac = ''.join(['{:02x}'.format((uuid.getnode() >> ele) & 0xff) for ele in range(0, 8 * 6, 8)][::-1])
             # NOTE: no ':' as it is a waste of data
             resp = requests.post(BASE_URL + 'authenticate/', {'email': email, 'password': password}).text
@@ -121,7 +122,8 @@ while not logged_in:
                 window['forgot_password'].Update(value='forgot password')
             else:
                 window['log_in_error'].Update(visible=False)
-                window['forgot_password'].Update(value='Log in successful')
+                window['forgot_password'].Update(value='log in successful')
+                window.Read(timeout=1)
                 token = resp
                 with open('.token', 'w') as f: f.write(email + '\n' + token)
                 create_key(password)
