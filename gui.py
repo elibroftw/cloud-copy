@@ -3,6 +3,7 @@ import sys
 import uuid
 
 sg.theme('DarkBlack')
+BASE_URL = '167.99.191.206'
 
 layout = [[sg.Text('Log into Cloud Copy', font=('Helvetica', 18))],
           [sg.Text('Email', font=('Arial', 11)), sg.InputText(font=('Arial', 11), key='email')],

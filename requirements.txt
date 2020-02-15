@@ -2,3 +2,4 @@ flask
 flask-compress
 pymongo
 passlib
+bcrypt
