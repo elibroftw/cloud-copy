@@ -45,9 +45,9 @@ def authenticate():
         token, mac = request.values.get('token'), request.values.get('mac')
         email, password = request.values.get('email'), request.values.get('password')
         if token:
-            user = users.find_one({'mac': mac})
             user = users.find_one({'token': token})
-            # return whether token is valid or not
+            if user: return 'True'
+            return 'Invalid Token'
         else:
             user = users.find_one({'email': email})
         if not user:  # user DNE
