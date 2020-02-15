@@ -36,17 +36,16 @@ def start_service(key, token):
         try:
             new_copy = pyperclip.paste()
             if current_text != new_copy:
-                requests.post(BASE_URL + 'share-copy/', {'token': token, 'contents': new_copy})
+                requests.post(BASE_URL + 'share-copy/', {'token': token, 'contents': encrypt(key, new_copy)})
             else:
                 resp = requests.get(BASE_URL + f'newest-copy/?token={token}').text
                 if resp != 'false':
                     resp = json.loads(resp)
-                    new_copy, timestamp = resp['current_copy'], resp['timestmap']
-                    if new_copy != current_text:
-                        latest_copy_date = datetime.strptime(timestamp)
-                        if last_update < latest_copy_date:
-                            current_text = new_copy
-                            pyperclip.copy(new_copy)
+                    new_copy, timestamp = decrypt(key, resp['current_copy']), datetime.strptime(resp['timestmap'])
+                    if new_copy != current_text and last_update < timestamp:
+                        last_update = timestamp
+                        current_text = new_copy
+                        pyperclip.copy(new_copy)
             time.sleep(2)
         except requests.RequestException: time.sleep(60)  # wait 60 seconds before trying again
     # For every copied data, send the token with the data
