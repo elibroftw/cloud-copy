@@ -14,8 +14,8 @@ from cryptography.hazmat.primitives.kdf.pbkd2 import PBKDF2HMAC
 import pyperclipf
 
 sg.theme('DarkBlack')
-# BASE_URL = 'http://167.99.191.206:5000/'
-BASE_URL = 'http://127.0.0.1:5000/' 
+# BASE_URL = 'http://167.99.191.206:80/'
+BASE_URL = 'http://127.0.0.1:5000/'
 
 layout = [[sg.Text('Log into Cloud Copy', font=('Helvetica', 18))],
           [sg.Text('Email', font=('Arial', 11)), sg.InputText(font=('Arial', 11), key='email')],
@@ -31,7 +31,7 @@ logged_in = False
 
 def start_service(key, token):
     current_text = pyperclip.paste()
-    last_update = datetime.today()
+    last_update = datetime.now()
     while True:
         try:
             new_copy = pyperclip.paste()
@@ -41,7 +41,8 @@ def start_service(key, token):
                 resp = requests.get(BASE_URL + f'newest-copy/?token={token}').text
                 if resp != 'false':
                     resp = json.loads(resp)
-                    new_copy, timestamp = decrypt(key, resp['current_copy']), datetime.strptime(resp['timestmap'])
+                    new_copy, timestamp = decrypt(key, resp['current_copy']), resp['timestmap']
+                    timestamp = datetime.strptime(timestamp, '%Y-%m-%d %I:%M:%S.%f')
                     if new_copy != current_text and last_update < timestamp:
                         last_update = timestamp
                         current_text = new_copy
