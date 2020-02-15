@@ -3,7 +3,8 @@ from flask_compress import Compress
 from werkzeug.middleware.proxy_fix import ProxyFix
 from environs import Env
 from pymongo import MongoClient
-from passlib.hash import sha256_crypt
+import bcrypt
+import uuid
 import os
 
 Env().read_env()  # read from .env
@@ -23,6 +24,17 @@ sample_user = {'email': 'cool_guy123@cool_domain.com',
                'tokens': {'token-value': 'MAC'}}
 
 
+def get_hashed_password(plain_text_password):
+    # Hash a password for the first time
+    #   (Using bcrypt, the salt is saved into the hash itself)
+    return bcrypt.hashpw(plain_text_password, bcrypt.gensalt())
+
+
+def check_password(plain_text_password, hashed_password):
+    # Check hashed password. Using bcrypt, the salt is saved into the hash itself
+    return bcrypt.checkpw(plain_text_password, hashed_password)
+
+
 @app.route('/authenticate/', methods=['POST'])
 def authenticate():
     # TODO: if not an email, forget password won't work
@@ -36,13 +48,20 @@ def authenticate():
         else:
             user = users.find({'email': email})
         if not user:  # user DNE
+<<<<<<< HEAD
             password = sha256_crypt.encrypt(password)
             
             # hash password -> insert into mongodb
             # create token -> create a random authentication token that does not exist already
             # create new user -> inserts user into the pymongo collection
+=======
+            hashed_password = get_hashed_password(password)
+            # hash password
+            # create token
+            # create new user
+>>>>>>> d905509b015f3d160d79cca6cbd8f15aed17121b
         else:
-            sha256_crypt.verify(password, user['password'])
+            check_password(password, user['password'])
             pass
             # return new token
 
@@ -55,6 +74,7 @@ def authenticate():
             # how to get peak?
 
 
+# IGNORE for now
 @app.route('/connect/', methods=['POST'])
 def connect():
     if request.method == 'POST':
