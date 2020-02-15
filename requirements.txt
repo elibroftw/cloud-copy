@@ -2,6 +2,7 @@ wheel
 flask
 flask-compress
 pymongo
+cryptography
 pyperclip
 environs
 passlib

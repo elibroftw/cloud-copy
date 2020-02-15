@@ -30,6 +30,7 @@ logged_in = False
 
 
 def start_service(key, token):
+    print('monitoring clipboard')
     current_text = pyperclip.paste()
     last_update = datetime.now()
     while True:
