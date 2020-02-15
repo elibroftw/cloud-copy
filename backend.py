@@ -61,10 +61,11 @@ def authenticate():
             
             # create new user
             new_user = {'email': email, 'password': hashed_password, 'tokens': [new_token]}
+            users.insert_one(new_user)
         else:
             if check_password(password, user['password']):
                 new_token = secrets.token_urlsafe() 
-                while(tokens.find_one({'token': new_token})):
+                while tokens.find_one({'token': new_token}):
                     new_token = secrets.token_urlsafe()
                 tokens.insert_one({'token': new_token, 'email': email})
                 user_tokens = user['tokens'].append(new_token)
