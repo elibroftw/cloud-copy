@@ -2,6 +2,7 @@ flask
 flask-compress
 pymongo
 pyperclip
+environs
 passlib
 bcrypt
 gunicorn
