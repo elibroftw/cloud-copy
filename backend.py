@@ -26,15 +26,15 @@ sample_user = {'email': 'cool_guy123@cool_domain.com',
                'tokens': {'token-value': 'MAC'}}
 
 
-def get_hashed_password(plain_text_password):
+def get_hashed_password(plain_text_password: str):
     # Hash a password for the first time
     #   (Using bcrypt, the salt is saved into the hash itself)
-    return bcrypt.hashpw(plain_text_password, bcrypt.gensalt())
+    return bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
 
 
-def check_password(plain_text_password, hashed_password):
+def check_password(plain_text_password: str, hashed_password):
     # Check hashed password. Using bcrypt, the salt is saved into the hash itself
-    return bcrypt.checkpw(plain_text_password, hashed_password)
+    return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_password)
 
 
 @app.route('/authenticate/', methods=['POST'])
@@ -42,13 +42,13 @@ def authenticate():
     # TODO: if not an email, forget password won't work
     # TODO: what if there is a space
     if request.method == 'POST':
-        token, mac = request.args.get('token'), request.args.get('mac')
-        email, password = request.args.get('email'), request.args.get('password')
+        token, mac = request.values.get('token'), request.values.get('mac')
+        email, password = request.values.get('email'), request.values.get('password')
         if token:
-            user = users.find({'mac': mac})
-            user = users.find({'token': token})
+            user = users.find_one({'mac': mac})
+            user = users.find_one({'token': token})
         else:
-            user = users.find({'email': email})
+            user = users.find_one({'email': email})
         if not user:  # user DNE
             hashed_password = get_hashed_password(password)
             # hash password -> insert into mongodb - Done
