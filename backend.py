@@ -26,15 +26,15 @@ sample_user = {'email': 'cool_guy123@cool_domain.com',
                'tokens': {'token-value': 'MAC'}}
 
 
-def get_hashed_password(plain_text_password):
+def hash_password(plain_text_password: str):
     # Hash a password for the first time
     #   (Using bcrypt, the salt is saved into the hash itself)
-    return bcrypt.hashpw(plain_text_password, bcrypt.gensalt())
+    return bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
 
 
-def check_password(plain_text_password, hashed_password):
+def check_password(plain_text_password: str, hashed_password):
     # Check hashed password. Using bcrypt, the salt is saved into the hash itself
-    return bcrypt.checkpw(plain_text_password, hashed_password)
+    return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_password)
 
 
 @app.route('/authenticate/', methods=['POST'])
@@ -50,7 +50,7 @@ def authenticate():
         else:
             user = users.find_one({'email': email})
         if not user:  # user DNE
-            hashed_password = get_hashed_password(password)
+            hashed_password = hash_password(password)
             # hash password -> insert into mongodb
             # create token -> create a random authentication token that does not exist already
             # create new user -> inserts user into the pymongo collection
