@@ -53,8 +53,6 @@ while not logged_in:
                 logged_in = True
                 time.sleep(0.5)
             # also send PC Name?
-            # authenticate user
-            
     # print(event)
 window.close()
 # user logged in now
