@@ -80,36 +80,6 @@ def authenticate():
     return 'False'
 
 
-# IGNORE for now
-@app.route('/connect/', methods=['POST'])
-def connect():
-    if request.method == 'POST':
-        token, mac = request.args.get('token'), request.args.get('mac')
-        email, password = request.args.get('email'), request.args.get('password')
-        if token:
-            user = users.find({'mac': mac})
-            user = users.find({'token': token})
-        else:
-            user = users.find({'email': email})
-        if not user:  # user DNE
-            password = sha256_crypt.encrypt(password)
-            # hash password
-            # create token
-            # create new user
-        else:
-            sha256_crypt.verify(password, user['password'])
-            pass
-            # return new token of 128-bit
-
-            # check if exists
-            # check if correct
-
-            # blind spots
-            # last login should not be past 6 months
-            # db should be cleaned every month or day at lowest peak
-            # how to get peak?
-
-
 if __name__ == '__main__':
     assert os.path.exists('.env')
     app.run(debug=True, host='', port=5000)
