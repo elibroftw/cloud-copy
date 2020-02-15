@@ -47,6 +47,7 @@ def authenticate():
         if token:
             user = users.find_one({'mac': mac})
             user = users.find_one({'token': token})
+            # return whether token is valid or not
         else:
             user = users.find_one({'email': email})
         if not user:  # user DNE
@@ -57,8 +58,8 @@ def authenticate():
             secrets.token_urlsafe() 
             # create new user
         else:
-            check_password(password, user['password'])
-            pass
+            if check_password(password, user['password']):
+                pass
             # return new token
 
             # check if exists
@@ -68,6 +69,7 @@ def authenticate():
             # last login should not be past 6 months
             # db should be cleaned every month or day at lowest peak
             # how to get peak?
+    return 'False'
 
 
 # IGNORE for now
