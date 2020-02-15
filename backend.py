@@ -73,6 +73,8 @@ def authenticate():
     return 'False'
 
 
+# TODO: forgot password
+
 if __name__ == '__main__':
     assert os.path.exists('.env')
     app.run(debug=True, host='', port=5000)

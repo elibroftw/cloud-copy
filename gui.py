@@ -1,9 +1,12 @@
 import PySimpleGUI as sg
 import sys
 import uuid
+import requests
+import time
 
 sg.theme('DarkBlack')
-BASE_URL = '167.99.191.206'
+# BASE_URL = 'http://167.99.191.206/'
+BASE_URL = 'http://127.0.0.1:5000/'
 
 layout = [[sg.Text('Log into Cloud Copy', font=('Helvetica', 18))],
           [sg.Text('Email', font=('Arial', 11)), sg.InputText(font=('Arial', 11), key='email')],
@@ -25,8 +28,8 @@ while not logged_in:
         sys.exit()
     if event == 'forgot_password':
         print('forgot password')
-    if event == 't':
-        print(window.find_element_with_focus())
+    if event == 't': pass
+        # print(window.find_element_with_focus())
     if event in ('\r', 'special 16777220', 'special 16777221', 'log_in'):
         email, password = values['email'], values['password']
         if not email:
@@ -38,12 +41,26 @@ while not logged_in:
             window['forgot_password'].Update(value='authenticating...')
             # mac = ''.join(['{:02x}'.format((uuid.getnode() >> ele) & 0xff) for ele in range(0, 8 * 6, 8)][::-1])
             # NOTE: no ':' as it is a waste of data
-            # also send PC Name
+            resp = requests.post(BASE_URL + 'authenticate/', {'email': email, 'password': password}).text
+            if resp == 'False':
+                window['log_in_error'].Update(visible=True)
+                window['forgot_password'].Update(value='forgot password')
+            else:
+                window['forgot_password'].Update(value='Log in successful')
+                with open('.token', 'w') as f:
+                    f.write(resp)
+                logged_in = True
+                time.sleep(0.5)
+            # also send PC Name?
             # authenticate user
             # if authenticated:
             #     # do stuff
             # else: window['log_in_error'].Update(visible=True)
             #     logged_in = True
-            # window['forgot_password'].Update(value='forgot password')
+            
     # print(event)
 window.close()
+# user logged in now
+# assume key exists
+# monitor clipboard now
+
