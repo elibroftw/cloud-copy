@@ -46,7 +46,7 @@ def authenticate():
         email, password = request.values.get('email'), request.values.get('password')
         if token:
             token_obj = tokens.find_one({'token': token})
-            if not token_obj: return 'Invalid Token'
+            if not token_obj: return 'invalid token'
             # if token is really old (6 months+) create a new one
             return token_obj['token']
         user = users.find_one({'email': email})
@@ -69,7 +69,7 @@ def authenticate():
                 user_tokens = user['tokens'] + [new_token]
                 users.update_one({'email': email}, {'$set': {'tokens': user_tokens}})
                 return new_token
-    return 'False'
+    return 'false'
 
 
 # TODO: forgot password

@@ -6,7 +6,7 @@ import time
 
 sg.theme('DarkBlack')
 # BASE_URL = 'http://167.99.191.206/'
-BASE_URL = 'http://127.0.0.1:5000/'
+BASE_URL = 'http://127.0.0.1:5000/' 
 
 layout = [[sg.Text('Log into Cloud Copy', font=('Helvetica', 18))],
           [sg.Text('Email', font=('Arial', 11)), sg.InputText(font=('Arial', 11), key='email')],
@@ -42,7 +42,7 @@ while not logged_in:
             # mac = ''.join(['{:02x}'.format((uuid.getnode() >> ele) & 0xff) for ele in range(0, 8 * 6, 8)][::-1])
             # NOTE: no ':' as it is a waste of data
             resp = requests.post(BASE_URL + 'authenticate/', {'email': email, 'password': password}).text
-            if resp == 'False':
+            if resp == 'false':
                 window['log_in_error'].Update(visible=True)
                 window['forgot_password'].Update(value='forgot password')
             else:
