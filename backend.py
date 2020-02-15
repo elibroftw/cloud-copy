@@ -110,5 +110,4 @@ def new_copies(methods=['GET']):
 # TODO: forgot password
 
 if __name__ == '__main__':
-    assert os.path.exists('.env')
-    app.run(debug=True, host='', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
