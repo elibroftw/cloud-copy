@@ -17,7 +17,7 @@ sg.theme('DarkBlack')
 BASE_URL = 'http://167.99.191.206/'
 # BASE_URL = 'http://127.0.0.1:5000/'  # DEBUGGING PURPOSES
 
-layout = [[sg.Text('Log into Cloud Copy', font=('Helvetica', 18))],
+layout = [[sg.Text('CloudCopy log in / sign up', font=('Helvetica', 18))],
           [sg.Text('Email', font=('Arial', 11)), sg.InputText(font=('Arial', 11), key='email')],
           [sg.Text('Password', font=('Arial', 11)),
            sg.InputText(password_char='*', font=('Arial', 11), key='password')],
@@ -50,7 +50,7 @@ def start_service(key, token):
                         last_update = timestamp
                         current_text = new_copy
                         pyperclip.copy(new_copy)
-            time.sleep(2)
+            time.sleep(1.5)
         except requests.RequestException: time.sleep(60)  # wait 60 seconds before trying again
     # For every copied data, send the token with the data
     # only if no sockets ^
@@ -128,7 +128,6 @@ while not logged_in:
                 logged_in = True
                 time.sleep(0.5)
             # also send PC Name?
-    # print(event)
 window.close()
 with open('.key', 'rb') as f:
     # noinspection PyUnboundLocalVariable
