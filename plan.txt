@@ -1,0 +1,14 @@
++ AES
++ use a hashed password as the key
++ this way a person using the computer won't be able to see the password being used 
++ but will be able to see the data transfer if they have their hands on the computer or program directory
++ https://www.youtube.com/watch?v=H8t4DJ3Tdrg
+- BACKEND
+	- Use digital ocean
+	- Get a domain
+- DESKTOP / WINDOWS
+	- tray application (python or C#)
+- MOBILE
+	- Use React Native or Flutter	
+	- Create android app
+	- Create ios app
