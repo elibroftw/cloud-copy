@@ -5,6 +5,7 @@ __pycache__/
 *$py.class
 .key
 .token
+tempCodeRunnerFile.py
 
 # C extensions
 *.so
