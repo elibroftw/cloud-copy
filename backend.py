@@ -54,8 +54,8 @@ def authenticate():
             hashed_password = get_hashed_password(password)
             # hash password -> insert into mongodb - Done
             # create token -> create a random authentification token that doesn't exist already 
-            while
-            secrets.token_urlsafe() 
+            while(token.find_one({'token': token})):
+                secrets.token_urlsafe() 
             # create new user
         else:
             if check_password(password, user['password']):
