@@ -3,6 +3,7 @@ import sys
 # import uuid
 import json
 import requests
+from requests.exceptions import ConnectionError
 import time
 import base64
 import os
@@ -80,19 +81,20 @@ def create_key(provided_password: str) -> bytes:
     return key
 
 
-# try to authenticate token
-# TODO: what if no internet?
 if os.path.exists('.token'):
     try:
         with open('.token') as f:
             email, token = f.read().split('\n')
             url = BASE_URL + 'authenticate/'
-            x = requests.post(url, {'email': email, 'token': token}).text
+            while True:
+                try:
+                    x = requests.post(url, {'email': email, 'token': token}).text
+                    break
+                except ConnectionError: time.sleep(60)
         if x != 'invalid token':
             logged_in = True
             if x != token:
-                with open('.token', 'w') as f:
-                    f.write(email + '\n' + token)
+                with open('.token', 'w') as f: f.write(email + '\n' + token)
     except ValueError: os.remove('.token')
 
 
@@ -111,24 +113,28 @@ while not logged_in:
         elif not password:
             window['password'].set_focus()
         else:
-            window['log_in_error'].Update(visible=False)
+            window['log_in_error'].Update(visible=False, value='Incorrect email or password')
             window['forgot_password'].Update(value='authenticating...')
             window.Read(timeout=1)
             # mac = ''.join(['{:02x}'.format((uuid.getnode() >> ele) & 0xff) for ele in range(0, 8 * 6, 8)][::-1])
             # NOTE: no ':' as it is a waste of data
-            resp = requests.post(BASE_URL + 'authenticate/', {'email': email, 'password': password}).text
-            if resp == 'false':
-                window['log_in_error'].Update(visible=True)
+            try:
+                resp = requests.post(BASE_URL + 'authenticate/', {'email': email, 'password': password}).text
+                if resp == 'false':
+                    window['log_in_error'].Update(visible=True)
+                    window['forgot_password'].Update(value='forgot password')
+                else:
+                    window['log_in_error'].Update(visible=False)
+                    window['forgot_password'].Update(value='log in successful')
+                    window.Read(timeout=1)
+                    token = resp
+                    with open('.token', 'w') as f: f.write(email + '\n' + token)
+                    create_key(password)
+                    logged_in = True
+                    time.sleep(0.5)
+            except ConnectionError:
+                window['log_in_error'].Update(value='No internet connection', visible=True)
                 window['forgot_password'].Update(value='forgot password')
-            else:
-                window['log_in_error'].Update(visible=False)
-                window['forgot_password'].Update(value='log in successful')
-                window.Read(timeout=1)
-                token = resp
-                with open('.token', 'w') as f: f.write(email + '\n' + token)
-                create_key(password)
-                logged_in = True
-                time.sleep(0.5)
             # also send PC Name?
 window.close()
 with open('.key', 'rb') as f:
