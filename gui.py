@@ -37,14 +37,18 @@ def start_service(key, token):
         try:
             new_copy = pyperclip.paste()
             if current_text != new_copy:
-                requests.post(BASE_URL + 'share-copy/', {'token': token, 'contents': encrypt(key, new_copy.encode())})
+                r = requests.post(BASE_URL + 'share-copy/',
+                                  {'token': token, 'contents': encrypt(key, new_copy.encode())})
+                print(r.text)
+                # current_text = new_copy
             else:
                 resp = requests.get(BASE_URL + f'newest-copy/?token={token}').text
                 if resp != 'false':
                     resp = json.loads(resp)
-                    new_copy, timestamp = decrypt(key, resp['current_copy']).decode(), resp['timestmap']
+                    new_copy, timestamp = decrypt(key, resp['current_copy'].encode()).decode(), resp['timestamp']
                     timestamp = datetime.strptime(timestamp, '%Y-%m-%d %I:%M:%S.%f')
                     if new_copy != current_text and last_update < timestamp:
+                    if new_copy != current_text:
                         last_update = timestamp
                         current_text = new_copy
                         pyperclip.copy(new_copy)
@@ -58,13 +62,11 @@ def start_service(key, token):
 
 
 def encrypt(key, message: bytes) -> bytes:
-    f = Fernet(key)
-    return f.encrypt(message)
+    return Fernet(key).encrypt(message)
 
 
 def decrypt(key, encrypted: bytes) -> bytes:
-    f = Fernet(key)
-    return f.decrypt(encrypted)
+    return Fernet(key).decrypt(encrypted)
 
 
 def create_key(provided_password: str) -> bytes:
@@ -86,7 +88,7 @@ if os.path.exists('.token'):
     try:
         with open('.token') as f:
             email, token = f.read().split('\n')
-            url = BASE_URL + 'authentic/'
+            url = BASE_URL + 'authenticate/'
             x = requests.post(url, {'email': email, 'token': token}).text
         if x != 'invalid token':
             logged_in = True

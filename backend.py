@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from flask import Flask, request, jsonify
 from flask_compress import Compress
-# from werkzeug.middleware.proxy_fix import ProxyFix
+from werkzeug.middleware.proxy_fix import ProxyFix
 from dotenv import load_dotenv
 from pymongo import MongoClient
 import bcrypt
@@ -15,7 +15,7 @@ load_dotenv()  # read from .env
 DEVELOPMENT_SETTING = os.getenv('DEBUG')
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0 if DEVELOPMENT_SETTING else 604800
-# app.wsgi_app = ProxyFix(app.wsgi_app, 1)
+app.wsgi_app = ProxyFix(app.wsgi_app, 1)
 Compress(app)
 
 client = MongoClient()
@@ -60,10 +60,9 @@ def authenticate():
         user = users.find_one({'email': email})
         if not user:  # user DNE; create new user
             hashed_password = hash_password(password)
-            new_token = secrets.token_urlsafe() 
+            new_token = secrets.token_urlsafe()
             while tokens.find_one({'token': new_token}):
                 new_token = secrets.token_urlsafe()
-            
             tokens.insert_one({'token': new_token, 'email': email, 'created': datetime.today()})
             new_user = {'email': email, 'password': hashed_password, 'tokens': [new_token]}
             users.insert_one(new_user)
@@ -88,7 +87,7 @@ def share_copy():
         user = tokens.find_one({'token': token})
         if user:
             email = user['email']
-            users.update_one({'email': email}, {'$set': {'current_copy': contents, 'updated': datetime.today()}})
+            users.update_one({'email': email}, {'$set': {'current_copy': contents, 'updated': datetime.now()}})
             return 'true'
     return 'false'
 
