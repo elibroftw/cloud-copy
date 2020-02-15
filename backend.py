@@ -6,6 +6,7 @@ from pymongo import MongoClient
 import bcrypt
 import uuid
 import os
+import secrets
 
 Env().read_env()  # read from .env
 DEVELOPMENT_SETTING = os.environ.get('DEBUG', '')
@@ -48,18 +49,11 @@ def authenticate():
         else:
             user = users.find({'email': email})
         if not user:  # user DNE
-<<<<<<< HEAD
-            password = sha256_crypt.encrypt(password)
-            
-            # hash password -> insert into mongodb
-            # create token -> create a random authentication token that does not exist already
-            # create new user -> inserts user into the pymongo collection
-=======
             hashed_password = get_hashed_password(password)
-            # hash password
-            # create token
+            # hash password -> insert into mongodb - Done
+            # create token -> create a random authentification token that doesn't exist already 
+            secrets.token_urlsafe() 
             # create new user
->>>>>>> d905509b015f3d160d79cca6cbd8f15aed17121b
         else:
             check_password(password, user['password'])
             pass
