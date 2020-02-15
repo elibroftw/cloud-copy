@@ -55,7 +55,8 @@ def authenticate():
             # create token -> create a random authentification token that doesn't exist already 
             while(token.find_one({'token': token})):
                 secrets.token_urlsafe() 
-            # create new user
+            # create new user -> 
+            user.insert_1
         else:
             check_password(password, user['password'])
             pass
