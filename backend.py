@@ -39,6 +39,12 @@ def check_password(plain_text_password: str, hashed_password):
     # Check hashed password. Using bcrypt, the salt is saved into the hash itself
     return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_password)
 
+
+@app.route('/')
+def home():
+    return 'Everything is up and running'
+
+
 @app.route('/authenticate/', methods=['POST'])
 def authenticate():
     # TODO: if not an email, forget password won't work
