@@ -39,7 +39,6 @@ def start_service(key, token):
             if current_text != new_copy:
                 r = requests.post(BASE_URL + 'share-copy/',
                                   {'token': token, 'contents': encrypt(key, new_copy.encode())})
-                print(r.text)
                 current_text = new_copy
             else:
                 resp = requests.get(BASE_URL + f'newest-copy/?token={token}').text
