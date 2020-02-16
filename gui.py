@@ -17,6 +17,7 @@ import platform
 
 sg.theme('DarkBlack')
 BASE_URL = 'http://167.99.191.206/'
+starting_dir = os.path.dirname(os.path.realpath(__file__))
 # BASE_URL = 'http://127.0.0.1:5000/'  # DEBUGGING PURPOSES
 
 layout = [[sg.Text('CloudCopy Login / Sign Up', font=('Helvetica', 17))],
@@ -46,7 +47,7 @@ if platform.system() == 'Windows':
     if not os.path.exists(shortcut_path):
         shell = win32com.client.Dispatch('WScript.Shell')
         shortcut = shell.CreateShortCut(shortcut_path)
-        target = os.path.dirname(os.path.realpath(__file__)) + '\\Cloud Copy.exe'
+        target = starting_dir + '\\Cloud Copy.exe'
         shortcut.Targetpath = target
         shortcut.WorkingDirectory = starting_dir
         shortcut.WindowStyle = 1
