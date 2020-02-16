@@ -72,15 +72,6 @@ internal class MyService:Service() {
 //        }
     }
 
-    fun create_key(password: String): PBEKeySpec {
-        val salt = byteArrayOf(0)
-        val interations = 100000
-        val length = 32
-        val spec = PBEKeySpec(password.toCharArray(), salt, interations, length)
-        val f = Mac.getInstance("PBKDF2WithHmacSHA256")
-        return spec
-    }
-
     fun encrypt(key: ByteArray, text: String): String {
         // TODO
         return ""
