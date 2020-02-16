@@ -9,6 +9,7 @@ import bcrypt
 import os
 import secrets
 from datetime import datetime
+import json
 
 
 load_dotenv()  # read from .env
@@ -51,8 +52,10 @@ def authenticate():
     # TODO: if not an email, forget password won't work
     # TODO: what if there is a space
     if request.method == 'POST':
-        token, mac = request.values.get('token'), request.values.get('mac')
-        email, password = request.values.get('email'), request.values.get('password')
+        if request.data: json_data = json.loads(request.data)
+        else: json_data = request.values
+        token, mac = json_data.get('token'), json_data.get('mac')
+        email, password = json_data.get('email'), json_data.get('password')
         if token:
             token_obj = tokens.find_one({'token': token})
             if not token_obj: return 'invalid token'
@@ -84,7 +87,9 @@ def authenticate():
 @app.route('/share-copy/', methods=['POST'])
 def share_copy():
     if request.method == 'POST':
-        token, contents = request.values.get('token'), request.values.get('contents')
+        if request.data: json_data = json.loads(request.data)
+        else: json_data = request.values
+        token, contents = json_data.get('token'), json_data.get('contents')
         user = tokens.find_one({'token': token})
         if user:
             email = user['email']
