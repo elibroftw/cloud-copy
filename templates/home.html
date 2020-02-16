@@ -11,7 +11,7 @@
         <ul class="main-nav">
             <li class="/active"><a href="">Home</a> </li>
             <li><a href="/about">About</a> </li>
-            <li><a href="/dl">Download Link</a> </li>
+            <li><a href="/dl">Download</a> </li>
         </ul>
     </div>
     <div class="hero">
@@ -20,14 +20,30 @@
             <img id="logo" src="/static/images/logo.png">
             Cloud Copy
         </h1>
-        <button id="demo-btn" class="btn btn-one">
+        <button id="demo-btn" class="btn btn-one" onclick="openModal()">
             Watch Demo
         </button>
-        <!-- <div >
-                <a href="" > Watch Demo </a>
-            </div> -->
+        <div id="modal" class="modal">
+            <iframe class="modal-content" src="https://www.youtube.com/embed/rqtr_RvR3sY"></iframe>
+        </div>
     </div>
     <!-- </header> -->
+
+<script>
+    var modal = document.getElementById("modal");
+    var span = document.getElementsByClassName("close")[0];
+
+    function openModal() {
+        modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
 </body>
 
 </html>
