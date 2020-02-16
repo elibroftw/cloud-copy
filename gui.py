@@ -13,6 +13,7 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 import pyperclip
+import platform
 
 sg.theme('DarkBlack')
 BASE_URL = 'http://167.99.191.206/'
@@ -28,6 +29,36 @@ layout = [[sg.Text('CloudCopy Login / Sign Up', font=('Helvetica', 17))],
            sg.Text('forgot password', font=('Arial', 11), enable_events=True, key='forgot_password', size=(17, 1))]]
 
 logged_in = False 
+
+# add the startup stuff here, create a startup shortcut
+
+if platform.system() == 'Windows':
+    from getpass import getuser
+    import win32api
+    import win32com.client
+    import win32event
+    from winerror import ERROR_ALREADY_EXISTS
+    mutex = win32event.CreateMutex(None, False, 'name')
+    last_error = win32api.GetLastError()
+    if last_error == ERROR_ALREADY_EXISTS: sys.exit()
+    user = getuser()
+    shortcut_path = f'C:/Users/{user}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/Cloud Copy.lnk'
+    if not os.path.exists(shortcut_path):
+        shell = win32com.client.Dispatch('WScript.Shell')
+        shortcut = shell.CreateShortCut(shortcut_path)
+        target = os.path.dirname(os.path.realpath(__file__)) + '\\Cloud Copy.exe'
+        shortcut.Targetpath = target
+        shortcut.WorkingDirectory = starting_dir
+        shortcut.WindowStyle = 1
+        shortcut.save()
+
+
+elif platform.system() == 'Mac OS X': pass
+    
+elif platform.system() == 'Linux': pass
+
+    
+
 
 
 def start_service(key, token):

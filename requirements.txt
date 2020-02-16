@@ -11,3 +11,4 @@ gunicorn
 requests
 PySimpleGUI
 flask_socketio
+pypiwin32
