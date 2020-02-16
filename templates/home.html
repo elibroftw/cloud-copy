@@ -2,20 +2,20 @@
 <title> Cloud Copy </title>
 <link href="/static/style.css" rel="stylesheet" type="text/css">
 <link rel="icon" type="image/png" href="/static/images/logo.png">
-<link rel="shortcut icon" href="/static/images/favicon.ico"> 
+<link rel="shortcut icon" href="/static/images/favicon.ico">
 
 <body>
     <!-- <header> -->
     <div class="row">
 
         <ul class="main-nav">
-            <li class="/active"><a href="">About</a> </li>
-            <li><a href="/about">Download</a> </li>
+            <li><a href="#about">About</a> </li>
+            <li><a href="#download">Download</a> </li>
 
         </ul>
     </div>
     <div class="hero">
-        
+
         <h1>
             <img id="logo" src="/static/images/logo.png">
             Cloud Copy
@@ -24,32 +24,76 @@
             Watch Demo
         </button>
         <div id="modal" class="modal">
-            <iframe class="modal-content" src="https://www.youtube.com/embed/rqtr_RvR3sY"></iframe>
+            <iframe class="modal-content" src="https://www.youtube.com/embed/rqtr_RvR3sY?enablejsapi=1&version=3&playerapiid=ytplayer"></iframe>
         </div>
     </div>
 
+    <div id='about'>
     <h2>About</h2>
-    <h3>Downloads</h3>
-
-
-
-    <!-- </header> -->
-
-<script>
-    var modal = document.getElementById("modal");
-    var span = document.getElementsByClassName("close")[0];
-
-    function openModal() {
-        modal.style.display = "block";
-    }
-
-    // When the user clicks on <span> (x), close the modal
-    window.onclick = function (event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
+    <head>
+        <style>
+        div.background {
+          background: url(klematis.jpg) repeat;
         }
-    }
-</script>
+        
+        div.transbox {
+          margin: 0px;
+          background-color: #ffffff;
+          border: 3px solid black;
+          opacity: 0.6;
+          margin-left: 5%;
+          margin-right: 5%;
+        }
+        
+        div.transbox p {
+          margin: 2%;
+          margin-left: 4.5%;
+          font-weight: bold;
+          color: #000000;
+        }
+        </style>
+        </head>
+    <div class="background">
+    <div class="transbox">
+    <p>
+        Cloud Copy is a modern, novel solution to clipboard management. It allows you to copy something on one
+        device, and paste it directly into another, seamlessly. No hassle. No middle man. Your universal clipboard - Cloud Copy.
+        <br> <br>
+        Cloud Copy differentiates itself from other clipboard applications by not depending on
+        Chrome, or any browser you use. Versatile accross all platforms, connect
+        all your devices with a single account.
+    </p>
+</div>
+</div>
+</div>
+</div>
+<div id='download'>
+    <h3>Download</h3>
+    <div id="windows">
+        <hX>Windows:</hX>
+        <ul>
+            <li>32 bit</li>
+            <li>64 bit</li>
+        </ul>
+    </div>
+</div>
+    <script>
+        var modal = document.getElementById("modal");
+        var span = document.getElementsByClassName("close")[0];
+
+        function openModal() {
+            modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                var iframe = document.getElementsByTagName('iframe')[0];
+                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+            }
+        }
+    </script>
 </body>
 
 </html>
