@@ -57,10 +57,6 @@ elif platform.system() == 'Mac OS X': pass
     
 elif platform.system() == 'Linux': pass
 
-    
-
-
-
 def start_service(key, token):
     print('monitoring clipboard')
     current_text = pyperclip.paste()
