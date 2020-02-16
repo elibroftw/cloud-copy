@@ -18,13 +18,13 @@ sg.theme('DarkBlack')
 BASE_URL = 'http://167.99.191.206/'
 # BASE_URL = 'http://127.0.0.1:5000/'  # DEBUGGING PURPOSES
 
-layout = [[sg.Text('CloudCopy Log in / Sign up', font=('Helvetica', 17))],
+layout = [[sg.Text('CloudCopy Login / Sign Up', font=('Helvetica', 17))],
           [sg.Text('Email', pad=((4, 35), (4, 4)), font=('Arial', 11)), sg.InputText(font=('Arial', 11), key='email')],
           [sg.Text('Password', font=('Arial', 11)),
            sg.InputText(password_char='*', font=('Arial', 11), key='password')],
-          [sg.Text('Incorrect email or password', key='log_in_error', size=(30, 1), text_color='#ff425c',
+          [sg.Text('Incorrect email or password', key='login_error', size=(30, 1), text_color='#ff425c',
                    font=('Arial', 11), visible=False)],
-          [sg.Button('Log in or Sign up', key='log_in', font=('Arial', 11)),
+          [sg.Button('Login or Sign up', key='login', font=('Arial', 11)),
            sg.Text('forgot password', font=('Arial', 11), enable_events=True, key='forgot_password', size=(17, 1))]]
 
 logged_in = False 
@@ -106,14 +106,14 @@ while not logged_in:
     if event == 'forgot_password':
         print('forgot password')
     if event == 't': pass
-    if event in ('\r', 'special 16777220', 'special 16777221', 'log_in'):
+    if event in ('\r', 'special 16777220', 'special 16777221', 'login'):
         email, password = values['email'], values['password']
         if not email:
             window['email'].set_focus()
         elif not password:
             window['password'].set_focus()
         else:
-            window['log_in_error'].Update(visible=False, value='Incorrect email or password')
+            window['login_error'].Update(visible=False, value='Incorrect email or password')
             window['forgot_password'].Update(value='authenticating...')
             window.Read(timeout=1)
             # mac = ''.join(['{:02x}'.format((uuid.getnode() >> ele) & 0xff) for ele in range(0, 8 * 6, 8)][::-1])
@@ -121,11 +121,11 @@ while not logged_in:
             try:
                 resp = requests.post(BASE_URL + 'authenticate/', {'email': email, 'password': password}).text
                 if resp == 'false':
-                    window['log_in_error'].Update(visible=True)
+                    window['login_error'].Update(visible=True)
                     window['forgot_password'].Update(value='forgot password')
                 else:
-                    window['log_in_error'].Update(visible=False)
-                    window['forgot_password'].Update(value='log in successful')
+                    window['login_error'].Update(visible=False)
+                    window['forgot_password'].Update(value='login successful')
                     window.Read(timeout=1)
                     token = resp
                     with open('.token', 'w') as f: f.write(email + '\n' + token)
@@ -133,7 +133,7 @@ while not logged_in:
                     logged_in = True
                     time.sleep(0.5)
             except ConnectionError:
-                window['log_in_error'].Update(value='No internet connection', visible=True)
+                window['login_error'].Update(value='No internet connection', visible=True)
                 window['forgot_password'].Update(value='forgot password')
             # also send PC Name?
 window.close()
