@@ -8,7 +8,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:steel_crypt/steel_crypt.dart';
 import 'package:flutter/services.dart';
 
-//void main() => runApp(MyApp());
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -17,7 +16,6 @@ Future main() async {
 
 String email;
 String token;
-
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -66,20 +64,25 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (email == "" || password == "") {
       print("All fields must be completed");
+      FocusNode myFocusNode = FocusNode();
 //      TODO: focus on empty field
     } else {
       var url = baseURL + '/authenticate/';
       var response =
           await http.post(url, body: {'email': email, 'password': password});
-      token = response.body;
-      if (token == '') {
-        // TODO: change back to false
+//      token = response.body;
+      Map valueMap = json.decode(response.body);
+      token = valueMap['token'];
+      ByteData cryptionKey = valueMap['key'];
+      if (token == '') {  // TODO: change back to false
         // text about invalid email/password
       } else {
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('email', email);
         prefs.setString('token', token);
-//        TODO: create encryption/decryption key
+        prefs.setString('cryptionKey', cryptionKey.toString());
+//      TODO: create encryption/decryption key
+
 
         Navigator.push(
           context,
@@ -95,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final emailField = TextField(
       controller: emailController,
       obscureText: false,
+      autofocus: true,
       style: new TextStyle(color: Colors.white),
       decoration: InputDecoration(
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),

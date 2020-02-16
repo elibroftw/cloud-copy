@@ -71,6 +71,7 @@ def authenticate():
             new_user = {'email': email, 'password': hashed_password, 'tokens': [new_token]}
             users.insert_one(new_user)
             # TODO: send an email to welcome user to Cloud Copy upon sign up
+            # TODO: in 0.1.3a send {'token': new_token, 'key': create_key(password)}
             return new_token
         else:  # user does exist
             if check_password(password, user['password']):
@@ -80,6 +81,7 @@ def authenticate():
                 tokens.insert_one({'token': new_token, 'email': email, 'created': datetime.today()})
                 user_tokens = user['tokens'] + [new_token]
                 users.update_one({'email': email}, {'$set': {'tokens': user_tokens}})
+                # TODO: in 0.1.3a send {'token': new_token, 'key': create_key(password)}
                 return new_token
     return 'false'
 

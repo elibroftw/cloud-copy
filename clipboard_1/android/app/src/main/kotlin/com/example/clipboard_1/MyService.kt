@@ -12,12 +12,18 @@ import android.content.Context
 import android.content.ClipboardManager
 import java.sql.Timestamp
 import java.sql.Date
-import java.sql.utilDate
 import java.lang.Thread
-import klaxon.JsonObject
+import java.security.SecureRandom
+import com.android.volley.toolbox.Volley
+import com.beust.klaxon.JsonObject
+import javax.crypto.Mac
+import javax.crypto.MacSpi
+import javax.crypto.spec.SecretKeySpec
+import javax.crypto.spec.PBEKeySpec
+
+//import klaxon.JsonObject
 
 internal class MyService:Service() {
-//    private var PRIVATE_MODE = 0
     private val BASE_URL = "http://167.99.191.206/"
     override fun onCreate() {
         super.onCreate();
@@ -31,13 +37,13 @@ internal class MyService:Service() {
         val queue = Volley.newRequestQueue(this)
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         var currentCopy = clipboard.getPrimaryClip().getItemAt(0).text.toString()
-        var lastUpdate = java.sql.Date(utilDate.getTime())
-        printl(lastUpdate) // TODO: better format
+        var lastUpdate = Date(System.currentTimeMillis())
+        println(lastUpdate) // TODO: better format
 //        ClipData.newPlainText("text", et_copy_text.text);
 //        myClipboard?.setPrimaryClip(myClip);
-        var getNewCopyURL = BASE_URL + "newest-copy/?${token}"
-        var sendNewCopyURL = BASE_URL + 'share-copy'
-        var newCopy;
+        val getNewCopyURL = "${BASE_URL}newest-copy/?token=${token}"
+        val sendNewCopyURL = "${BASE_URL}share-copy/"
+//        var newCopy
 //        while true {
 //            // TODO: try catch no internet error
 //            newCopy = clipboard.getPrimaryClip().getItemAt(0).text.toString()
@@ -66,12 +72,23 @@ internal class MyService:Service() {
 //        }
     }
 
-    fun encrypt(key, text) {
-        // TODO
+    fun create_key(password: String): PBEKeySpec {
+        val salt = byteArrayOf(0)
+        val interations = 100000
+        val length = 32
+        val spec = PBEKeySpec(password.toCharArray(), salt, interations, length)
+        val f = Mac.getInstance("PBKDF2WithHmacSHA256")
+        return spec
     }
 
-    fun decrypt(key, text) {
+    fun encrypt(key: ByteArray, text: String): String {
         // TODO
+        return ""
+    }
+
+    fun decrypt(key: ByteArray, text: String): String {
+        // TODO
+        return ""
     }
     @Nullable
     override fun onBind(intent:Intent): IBinder? {
