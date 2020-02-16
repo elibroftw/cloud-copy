@@ -3,9 +3,9 @@
 <link href="/static/style.css" rel="stylesheet" type="text/css">
 <link rel="icon" type="image/png" href="/static/images/logo.png">
 <link rel="shortcut icon" href="/static/images/favicon.ico">
-
+<link href='https://fonts.googleapis.com/css?family=Offside' rel='stylesheet'>
+<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Ubuntu"/>
 <body>
-    <!-- <header> -->
     <div class="row">
 
         <ul class="main-nav">
@@ -24,59 +24,91 @@
             Watch Demo
         </button>
         <div id="modal" class="modal">
-            <iframe class="modal-content" src="https://www.youtube.com/embed/rqtr_RvR3sY?enablejsapi=1&version=3&playerapiid=ytplayer"></iframe>
+            <iframe class="modal-content"
+                src="https://www.youtube.com/embed/rqtr_RvR3sY?enablejsapi=1&version=3&playerapiid=ytplayer"></iframe>
         </div>
     </div>
 
     <div id='about'>
-    <h2>About</h2>
-    <head>
-        <style>
-        div.background {
-          background: url(klematis.jpg) repeat;
-        }
-        
-        div.transbox {
-          margin: 0px;
-          background-color: #ffffff;
-          border: 3px solid black;
-          opacity: 0.6;
-          margin-left: 5%;
-          margin-right: 5%;
-        }
-        
-        div.transbox p {
-          margin: 2%;
-          margin-left: 4.5%;
-          font-weight: bold;
-          color: #000000;
-        }
-        </style>
+        <h2>About</h2>
+
+        <head>
+            <style>
+                div.background {
+                    background: url(klematis.jpg) repeat;
+                }
+
+                div.transbox {
+                    margin: 0px;
+                    background-color: #ffffff;
+                    border: 3px solid black;
+                    opacity: 0.6;
+                    margin-left: 5%;
+                    margin-right: 5%;
+                }
+
+                div.transbox p {
+                    margin: 2%;
+                    margin-left: 4.5%;
+                    font-weight: bold;
+                    color: #000000;
+                }
+            </style>
         </head>
-    <div class="background">
-    <div class="transbox">
-    <p>
-        Cloud Copy is a modern, novel solution to clipboard management. It allows you to copy something on one
-        device, and paste it directly into another, seamlessly. No hassle. No middle man. Your universal clipboard - Cloud Copy.
-        <br> <br>
-        Cloud Copy differentiates itself from other clipboard applications by not depending on
-        Chrome, or any browser you use. Versatile accross all platforms, connect
-        all your devices with a single account.
-    </p>
-</div>
-</div>
-</div>
-</div>
-<div id='download'>
-    <h3>Download</h3>
-    <div id="windows">
-        <hX>Windows:</hX>
-        <ul>
-            <li>32 bit</li>
-            <li>64 bit</li>
-        </ul>
+        <div class="background">
+            <div class="transbox">
+                <p>
+                    Cloud Copy is a novel solution to clipboard management. It allows you to copy something on
+                    one
+                    device, and paste it directly into another, seamlessly.
+                    <br> <br>
+                    Cloud Copy differentiates itself from other clipboard applications by not depending on
+                    Chrome, or any browser you use. Versatile accross all platforms, connect
+                    all your devices with a single account.
+                </p>
+            </div>
+        </div>
     </div>
-</div>
+    </div>
+    <div id='download'>
+        <h3>Download</h3>
+        <div id="windows">
+            <hX>Windows</hX>
+            <ul>
+                <a class="dl-link" href="">32 bit</a><br>
+                <a class="dl-link" href="">64 bit</a>
+            </ul>
+        </div>
+        <div id="mac">
+            <hX>Macintosh</hX>
+            <ul>
+                <a class="dl-link" href="">32 bit</a><br>
+                <a class="dl-link" href="">64 bit</a>
+            </ul>
+        </div>
+        <div id="linux">
+            <hX>Linux</hX>
+            <ul>
+                <a class="dl-link" href="">32 bit</a><br>
+                <a class="dl-link" href="">64 bit</a>
+            </ul>
+        </div>
+        <div id="mobile">
+            <hX>Mobile</hX>
+            <ul>
+                <a class="dl-link" href="">Google Play</a><br>
+                <a class="dl-link" class="dl-link" href="">App Store</a>
+            </ul>
+        </div>
+    </div>
+    
+    <button onclick="topFunction()" id="btn-top" title="Go to top">
+        <svg class="arrow up" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="5 0 50 80" xml:space="preserve">
+            <polyline fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" points="
+        0.375, 35.375 28.375, 0.375 58.67, 35.375 " />
+          </svg>
+    </button>
+
     <script>
         var modal = document.getElementById("modal");
         var span = document.getElementsByClassName("close")[0];
@@ -93,7 +125,25 @@
                 iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
             }
         }
+
+        var mybutton = document.getElementById("btn-top");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
     </script>
 </body>
-
 </html>
