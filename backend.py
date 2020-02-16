@@ -87,7 +87,9 @@ def authenticate():
 @app.route('/share-copy/', methods=['POST'])
 def share_copy():
     if request.method == 'POST':
-        token, contents = request.values.get('token'), request.values.get('contents')
+        if request.data: json_data = json.loads(request.data)
+        else: json_data = request.values
+        token, contents = json_data.get('token'), json_data.get('contents')
         user = tokens.find_one({'token': token})
         if user:
             email = user['email']
