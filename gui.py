@@ -18,6 +18,7 @@ import platform
 sg.theme('DarkBlack')
 BASE_URL = 'http://167.99.191.206/'
 starting_dir = os.path.dirname(os.path.realpath(__file__))
+VERSION = '0.1.0a'
 # BASE_URL = 'http://127.0.0.1:5000/'  # DEBUGGING PURPOSES
 
 layout = [[sg.Text('CloudCopy Login / Sign Up', font=('Helvetica', 17))],
