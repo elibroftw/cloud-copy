@@ -18,8 +18,8 @@ import platform
 sg.theme('DarkBlack')
 BASE_URL = 'http://167.99.191.206/'
 starting_dir = os.path.dirname(os.path.realpath(__file__))
-VERSION = '0.1.1a'
-# BASE_URL = 'http://127.0.0.1:5000/'  # DEBUGGING PURPOSES
+VERSION = '0.1.2a'
+# BASE_URL = 'http://127.0.0.1:5000/'  # DEBUGGING PURPOSES 
 
 layout = [[sg.Text('CloudCopy Login / Sign Up', font=('Helvetica', 17))],
           [sg.Text('Email', pad=((4, 35), (4, 4)), font=('Arial', 11)), sg.InputText(font=('Arial', 11), key='email')],
@@ -81,7 +81,9 @@ def start_service(key, token):
                         current_text = new_copy
                         pyperclip.copy(new_copy)
             time.sleep(1.5)
-        except (requests.RequestException, json.decoder.JSONDecodeError): time.sleep(60)  # wait 60 seconds before trying again
+        except (requests.RequestException, json.decoder.JSONDecodeError):
+            print('error')
+            time.sleep(60)  # wait 60 seconds before trying again
     # For every copied data, send the token with the data
     # only if no sockets ^
     # Make sure to handle no wifi
