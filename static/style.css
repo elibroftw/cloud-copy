@@ -149,7 +149,7 @@ h3 {
 .btn-one:hover {
     cursor: pointer;
     background-color: rgb(0, 0, 0, 0.6);
-    transition: all 0.5s ease-in;
+    transition: all 0.3s ease-in;
     border-color: rgb(0, 0, 0, 0.6);
 }
 
