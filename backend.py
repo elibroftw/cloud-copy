@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
 from flask import Flask, request, jsonify, render_template
 from flask_compress import Compress
 from werkzeug.middleware.proxy_fix import ProxyFix
 from dotenv import load_dotenv
 from pymongo import MongoClient
+import base64
 import bcrypt
 from cryptography.fernet import Fernet
 from cryptography.hazmat.backends import default_backend
@@ -58,6 +58,10 @@ def create_key(provided_password: str) -> bytes:
 
 
 @app.errorhandler(404)
+def page_not_found(_):
+    return render_template('home.html'), 404
+
+
 @app.route('/')
 def home():
     return render_template('home.html')

@@ -24,7 +24,7 @@
             Watch Demo
         </button>
         <div id="modal" class="modal">
-            <iframe class="modal-content" src="https://www.youtube.com/embed/k_FxkNObDYQ?enablejsapi=1&version=3&playerapiid=ytplayer"></iframe>
+            <iframe allowfullscreen width=66% height=75% class="modal-content" src="https://www.youtube.com/embed/k_FxkNObDYQ?enablejsapi=1&version=3&playerapiid=ytplayer"></iframe>
         </div>
     </div>
 
@@ -112,17 +112,18 @@
     <script>
         var modal = document.getElementById("modal");
         var span = document.getElementsByClassName("close")[0];
+        var yt_vid = document.getElementsByTagName('iframe')[0];
 
         function openModal() {
             modal.style.display = "block";
+            yt_vid.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
         }
 
         // When the user clicks on <span> (x), close the modal
         window.onclick = function (event) {
             if (event.target == modal) {
                 modal.style.display = "none";
-                var iframe = document.getElementsByTagName('iframe')[0];
-                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                yt_vid.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
             }
         }
 
