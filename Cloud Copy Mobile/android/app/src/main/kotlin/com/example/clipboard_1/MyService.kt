@@ -12,12 +12,18 @@ import android.content.Context
 import android.content.ClipboardManager
 import java.sql.Timestamp
 import java.sql.Date
-import java.sql.utilDate
 import java.lang.Thread
-import klaxon.JsonObject
+import java.security.SecureRandom
+import com.android.volley.toolbox.Volley
+import com.beust.klaxon.JsonObject
+import javax.crypto.Mac
+import javax.crypto.MacSpi
+import javax.crypto.spec.SecretKeySpec
+import javax.crypto.spec.PBEKeySpec
+
+//import klaxon.JsonObject
 
 internal class MyService:Service() {
-//    private var PRIVATE_MODE = 0
     private val BASE_URL = "http://167.99.191.206/"
     override fun onCreate() {
         super.onCreate();
@@ -27,17 +33,19 @@ internal class MyService:Service() {
 //        val mPrefs = activity?.getPreferences(Context.MODE_PRIVATE)
         val email = mPrefs.getString("flutter.email", "")
         val token = mPrefs.getString("flutter.token", "")
-        val cryptionKey = mPrefs.getString("flutter.cryptionKey", "")
+        val cryptionKey = mPrefs.getString("flutter.cryptionKey", "").toByteArray()
+        // b64 -> ByteArray, charset("UTF8")?
+
         val queue = Volley.newRequestQueue(this)
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         var currentCopy = clipboard.getPrimaryClip().getItemAt(0).text.toString()
-        var lastUpdate = java.sql.Date(utilDate.getTime())
-        printl(lastUpdate) // TODO: better format
+        var lastUpdate = Date(System.currentTimeMillis())
+        println(lastUpdate) // TODO: better format
 //        ClipData.newPlainText("text", et_copy_text.text);
 //        myClipboard?.setPrimaryClip(myClip);
-        var getNewCopyURL = BASE_URL + "newest-copy/?${token}"
-        var sendNewCopyURL = BASE_URL + 'share-copy'
-        var newCopy;
+        val getNewCopyURL = "${BASE_URL}newest-copy/?token=${token}"
+        val sendNewCopyURL = "${BASE_URL}share-copy/"
+//        var newCopy
 //        while true {
 //            // TODO: try catch no internet error
 //            newCopy = clipboard.getPrimaryClip().getItemAt(0).text.toString()
@@ -66,12 +74,24 @@ internal class MyService:Service() {
 //        }
     }
 
-    fun encrypt(key, text) {
-        // TODO
+    fun encrypt(key: ByteArray, text: String): String {
+//        val skey = SecretKeySpec(keyBytes,)
+//        val input = text.toByteArray(charset("UTF8"))
+        // Generate secret key for HmacSHA256
+//        val kg = KeyGenerator.getInstance("HmacSHA256")
+//        val sk = kg.generateKey()
+//
+//        // Get instance of Mac object implementing HmacSHA256, and
+//        // initialize it with the above secret key
+//        val mac = Mac.getInstance("HmacSHA256")
+//        mac.init(sk)
+//        val result = mac.doFinal("Hi There".getBytes())
+        return ""
     }
 
-    fun decrypt(key, text) {
+    fun decrypt(key: ByteArray, text: String): String {
         // TODO
+        return ""
     }
     @Nullable
     override fun onBind(intent:Intent): IBinder? {

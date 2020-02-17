@@ -147,6 +147,7 @@ h3 {
     text-transform: uppercase; 
     position: absolute;
     bottom: -230px;
+    border-radius: .5em;
 }
 
 .btn-one 
@@ -185,8 +186,6 @@ h3 {
     align-content: center;
     padding: 1px;
     border: .5px solid black;
-    width: 80%;
-    height: 75%;
 }
 
 /* The Close Button */

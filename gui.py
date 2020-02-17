@@ -103,7 +103,7 @@ def create_key(provided_password: str) -> bytes:
     password_b = provided_password.encode()  # Convert to type bytes
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
-        length=32,
+        length=32,  # TODO: change to 256
         salt=b'',
         iterations=100000,
         backend=default_backend())
@@ -158,6 +158,7 @@ while not logged_in:
                     window['login_error'].Update(visible=False)
                     window['forgot_password'].Update(value='login successful')
                     window.Read(timeout=1)
+                    # TODO: in 0.1.3a resp will be {'token': new_token, 'key': create_key(password)}
                     token = resp
                     with open('.token', 'w') as f: f.write(email + '\n' + token)
                     create_key(password)
