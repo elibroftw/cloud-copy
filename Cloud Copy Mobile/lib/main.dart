@@ -64,7 +64,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (email == "" || password == "") {
       print("All fields must be completed");
-      FocusNode myFocusNode = FocusNode();
 //      TODO: focus on empty field
     } else {
       var url = baseURL + '/authenticate/';

@@ -75,8 +75,8 @@ internal class MyService:Service() {
     }
 
     fun encrypt(key: ByteArray, text: String): String {
-        val skey = SecretKeySpec(keyBytes,)
-        val input = text.toByteArray(charset("UTF8"))
+//        val skey = SecretKeySpec(keyBytes,)
+//        val input = text.toByteArray(charset("UTF8"))
         // Generate secret key for HmacSHA256
 //        val kg = KeyGenerator.getInstance("HmacSHA256")
 //        val sk = kg.generateKey()
