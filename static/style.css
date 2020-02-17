@@ -298,22 +298,11 @@ h3 {
   }
 
 @viewport {
-  width: device-width ;
+  width: device-width;
   zoom: 1.0 ;
 }
 
 @-ms-viewport {
-    width: device-width ;
+    width: device-width;
   }
 
-  @media screen and (min-width:1080px) and (max-width:2960px) {
-    /* for screens that are at least 320 pixels wide but less than or equal to 640 pixels wide */
-    #mac {
-        color: black;
-        font-size: 20px;
-        float: left;
-        margin-left: 150%;
-        margin-bottom: -80%;
-    }
-
-  }
