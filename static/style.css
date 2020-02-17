@@ -296,8 +296,8 @@ h3 {
       text-decoration: none;
       font-style: italic;
   }
-  
-  @media only screen and (max-width: 600px) {
+
+  @media only screen and (max-width: 400px) {
     /* For mobile phones: */
     [class*="col-"] {
       width: 100%;
