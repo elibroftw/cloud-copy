@@ -33,7 +33,9 @@ internal class MyService:Service() {
 //        val mPrefs = activity?.getPreferences(Context.MODE_PRIVATE)
         val email = mPrefs.getString("flutter.email", "")
         val token = mPrefs.getString("flutter.token", "")
-        val cryptionKey = mPrefs.getString("flutter.cryptionKey", "")
+        val cryptionKey = mPrefs.getString("flutter.cryptionKey", "").toByteArray()
+        // b64 -> ByteArray, charset("UTF8")?
+
         val queue = Volley.newRequestQueue(this)
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         var currentCopy = clipboard.getPrimaryClip().getItemAt(0).text.toString()
@@ -73,7 +75,17 @@ internal class MyService:Service() {
     }
 
     fun encrypt(key: ByteArray, text: String): String {
-        // TODO
+        val skey = SecretKeySpec(keyBytes,)
+        val input = text.toByteArray(charset("UTF8"))
+        // Generate secret key for HmacSHA256
+//        val kg = KeyGenerator.getInstance("HmacSHA256")
+//        val sk = kg.generateKey()
+//
+//        // Get instance of Mac object implementing HmacSHA256, and
+//        // initialize it with the above secret key
+//        val mac = Mac.getInstance("HmacSHA256")
+//        mac.init(sk)
+//        val result = mac.doFinal("Hi There".getBytes())
         return ""
     }
 

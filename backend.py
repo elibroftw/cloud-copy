@@ -5,6 +5,10 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from dotenv import load_dotenv
 from pymongo import MongoClient
 import bcrypt
+from cryptography.fernet import Fernet
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 # import uuid
 import os
 import secrets
@@ -39,6 +43,18 @@ def hash_password(plain_text_password: str):
 def check_password(plain_text_password: str, hashed_password):
     # Check hashed password. Using bcrypt, the salt is saved into the hash itself
     return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_password)
+
+
+def create_key(provided_password: str) -> bytes:
+    password_b = provided_password.encode()  # Convert to type bytes
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,  # TODO: change to 256
+        salt=b'',
+        iterations=100000,
+        backend=default_backend())
+    key = base64.urlsafe_b64encode(kdf.derive(password_b))  # Can only use kdf once
+    return key
 
 
 @app.errorhandler(404)

@@ -73,17 +73,14 @@ class _MyHomePageState extends State<MyHomePage> {
 //      token = response.body;
       Map valueMap = json.decode(response.body);
       token = valueMap['token'];
-      ByteData cryptionKey = valueMap['key'];
+      String cryptionKey = valueMap['key']; // b64
       if (token == '') {  // TODO: change back to false
         // text about invalid email/password
       } else {
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('email', email);
         prefs.setString('token', token);
-        prefs.setString('cryptionKey', cryptionKey.toString());
-//      TODO: create encryption/decryption key
-
-
+        prefs.setString('cryptionKey', cryptionKey);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => AccountPage()),
