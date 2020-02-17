@@ -1,37 +1,37 @@
-*
+html {
+    scrollbar-color: #666 #363636;
+}
 
-{
+::-webkit-scrollbar {
+    width: 15px;
+}
+
+* {
     margin: 0;
     padding: 0;
 }
 
-body
-
-
-{
+body {
     background-image: url("/static/images/background.jpg");
     height: 167vh;
     background-size: cover;
     background-position: center;
 }
 
-.main-nav
-{
+.main-nav {
     float: right;
     list-style: none;
-    margin-top: 30px; 
+    margin-top: 30px;
 }
 
-.main-nav li
-{
+.main-nav li {
     display: inline-block;
-    
+
 }
 
-.main-nav li a
-{
+.main-nav li a {
     border-radius: 1em;
-    
+
     color: white;
     text-decoration: none;
     padding: 5px 40px;
@@ -40,39 +40,33 @@ body
 
 }
 
-.main-nav li.active a
-{
+.main-nav li.active a {
     border: 1px solid white;
 
 }
 
-.main-nav li a:hover
-{
+.main-nav li a:hover {
     /* border: 1px solid white; */
     /* font-size: xx-large; */
     background-color: rgb(0, 0, 0, 0.5);
 }
 
-#logo
-{
+#logo {
     width: 120px;
     height: auto;
     float: none;
 }
 
-body
-{
+body {
     font-family: monospace;
 }
 
-.row
-{
+.row {
     max-width: 1500px;
     margin: auto;
 }
 
-.hero
-{
+.hero {
     position: absolute;
     /* width: 1200px; */
     margin-left: 23%;
@@ -80,8 +74,7 @@ body
     margin-top: 250px;
 }
 
-h1
-{
+h1 {
     color: white;
     text-transform: uppercase;
     font-family: 'Offside';
@@ -130,34 +123,30 @@ h3 {
     margin-left: 50%;
 }
 
-#demo-btn
-{
+#demo-btn {
     margin-top: 30px;
-    margin-left: 40%; 
+    margin-left: 40%;
 }
 
-.btn 
-{
+.btn {
     border: 1px solid rgb(210, 210, 210);
     padding: 30px 30px;
     color: white;
     text-decoration: none;
     margin-right: 5px;
     font-size: 25px;
-    text-transform: uppercase; 
+    text-transform: uppercase;
     position: absolute;
     bottom: -230px;
     border-radius: .5em;
 }
 
-.btn-one 
-{
+.btn-one {
     background-color: darkcyan;
     font-family: 'Ubuntu';
 }
 
-.btn-one:hover
-{
+.btn-one:hover {
     cursor: pointer;
     background-color: rgb(0, 0, 0, 0.6);
     transition: all 0.5s ease-in;
@@ -196,7 +185,8 @@ h3 {
     font-weight: bold;
 }
 
-.close:hover, .close:focus {
+.close:hover,
+.close:focus {
     color: #000;
     text-decoration: none;
     cursor: pointer;
@@ -251,8 +241,8 @@ h3 {
     text-indent: 0;
 }
 
-  #btn-top {
-      background: transparent;
+#btn-top {
+    background: transparent;
     position: fixed;
     right: 1.2em;
     bottom: 1.2em;
@@ -279,30 +269,30 @@ h3 {
     cursor: pointer;
     padding: 15px;
     border-radius: 4px;
-    }
+}
 
-    #btn-top:hover {
-        background-color: rgb(150, 150, 150, 0.5);
-      }
+#btn-top:hover {
+    background-color: rgb(150, 150, 150, 0.5);
+}
 
-  .dl-link, .dl-link:visited {
-      color: darkcyan;
-      color: darkgrey;
-      background-color: rgb(0, 0, 0, 0.5);
-      border-radius: 1em;
-      padding-right: 5px;
-      padding-left: 5px;
-      margin-bottom: 10%;
-      text-decoration: none;
-      font-style: italic;
-  }
+.dl-link,
+.dl-link:visited {
+    color: darkcyan;
+    color: darkgrey;
+    background-color: rgb(0, 0, 0, 0.5);
+    border-radius: 1em;
+    padding-right: 5px;
+    padding-left: 5px;
+    margin-bottom: 10%;
+    text-decoration: none;
+    font-style: italic;
+}
 
 @viewport {
-  width: device-width;
-  zoom: 1.0 ;
+    width: device-width;
+    zoom: 1.0;
 }
 
 @-ms-viewport {
     width: device-width;
-  }
-
+}
