@@ -24,8 +24,7 @@
             Watch Demo
         </button>
         <div id="modal" class="modal">
-            <iframe class="modal-content"
-                src="https://www.youtube.com/embed/rqtr_RvR3sY?enablejsapi=1&version=3&playerapiid=ytplayer"></iframe>
+            <iframe allowfullscreen width=66% height=75% class="modal-content" src="https://www.youtube.com/embed/k_FxkNObDYQ?enablejsapi=1&version=3&playerapiid=ytplayer"></iframe>
         </div>
     </div>
 
@@ -33,6 +32,7 @@
         <h2>About</h2>
 
         <head>
+            <meta name="viewport" content="width=device-width, initial-scale=1">
             <style>
                 div.background {
                     background: url(klematis.jpg) repeat;
@@ -75,29 +75,30 @@
         <div id="windows">
             <hX>Windows</hX>
             <ul>
-                <a class="dl-link" href="">32 bit</a><br>
-                <a class="dl-link" href="">64 bit</a>
+                <a class="dl-link" href="https://github.com/elibroftw/cloud-copy/releases/download/v0.1.2a/Cloud.Copy.exe">64 bit</a><br>
+                <a class="dl-link" href="">32 bit</a>
             </ul>
         </div>
         <div id="mac">
             <hX>Macintosh</hX>
             <ul>
-                <a class="dl-link" href="">32 bit</a><br>
-                <a class="dl-link" href="">64 bit</a>
+                <a class="dl-link" href="">64 bit</a><br>
+                <a class="dl-link" href="">32 bit</a>
+                
             </ul>
         </div>
         <div id="linux">
             <hX>Linux</hX>
             <ul>
-                <a class="dl-link" href="">32 bit</a><br>
-                <a class="dl-link" href="">64 bit</a>
+                <a class="dl-link" href="">64 bit</a><br>
+                <a class="dl-link" href="">32 bit</a>
             </ul>
         </div>
         <div id="mobile">
             <hX>Mobile</hX>
             <ul>
                 <a class="dl-link" href="">Google Play</a><br>
-                <a class="dl-link" class="dl-link" href="">App Store</a>
+                <a class="dl-link" href="">App Store</a>
             </ul>
         </div>
     </div>
@@ -112,17 +113,18 @@
     <script>
         var modal = document.getElementById("modal");
         var span = document.getElementsByClassName("close")[0];
+        var yt_vid = document.getElementsByTagName('iframe')[0];
 
         function openModal() {
             modal.style.display = "block";
+            yt_vid.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
         }
 
         // When the user clicks on <span> (x), close the modal
         window.onclick = function (event) {
             if (event.target == modal) {
                 modal.style.display = "none";
-                var iframe = document.getElementsByTagName('iframe')[0];
-                iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+                yt_vid.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
             }
         }
 

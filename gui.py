@@ -17,7 +17,9 @@ import platform
 
 sg.theme('DarkBlack')
 BASE_URL = 'http://167.99.191.206/'
-# BASE_URL = 'http://127.0.0.1:5000/'  # DEBUGGING PURPOSES
+starting_dir = os.path.dirname(os.path.realpath(__file__))
+VERSION = '0.1.2a'
+# BASE_URL = 'http://127.0.0.1:5000/'  # DEBUGGING PURPOSES 
 
 layout = [[sg.Text('CloudCopy Login / Sign Up', font=('Helvetica', 17))],
           [sg.Text('Email', pad=((4, 35), (4, 4)), font=('Arial', 11)), sg.InputText(font=('Arial', 11), key='email')],
@@ -46,7 +48,7 @@ if platform.system() == 'Windows':
     if not os.path.exists(shortcut_path):
         shell = win32com.client.Dispatch('WScript.Shell')
         shortcut = shell.CreateShortCut(shortcut_path)
-        target = os.path.dirname(os.path.realpath(__file__)) + '\\Cloud Copy.exe'
+        target = starting_dir + '\\Cloud Copy.exe'
         shortcut.Targetpath = target
         shortcut.WorkingDirectory = starting_dir
         shortcut.WindowStyle = 1
@@ -79,7 +81,9 @@ def start_service(key, token):
                         current_text = new_copy
                         pyperclip.copy(new_copy)
             time.sleep(1.5)
-        except requests.RequestException: time.sleep(60)  # wait 60 seconds before trying again
+        except (requests.RequestException, json.decoder.JSONDecodeError):
+            print('error')
+            time.sleep(60)  # wait 60 seconds before trying again
     # For every copied data, send the token with the data
     # only if no sockets ^
     # Make sure to handle no wifi
@@ -99,7 +103,7 @@ def create_key(provided_password: str) -> bytes:
     password_b = provided_password.encode()  # Convert to type bytes
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
-        length=32,
+        length=32,  # TODO: change to 256
         salt=b'',
         iterations=100000,
         backend=default_backend())
@@ -154,6 +158,7 @@ while not logged_in:
                     window['login_error'].Update(visible=False)
                     window['forgot_password'].Update(value='login successful')
                     window.Read(timeout=1)
+                    # TODO: in 0.1.3a resp will be {'token': new_token, 'key': create_key(password)}
                     token = resp
                     with open('.token', 'w') as f: f.write(email + '\n' + token)
                     create_key(password)
