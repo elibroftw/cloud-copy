@@ -230,17 +230,6 @@ h3 {
     text-indent: 0;
 }
 
-
-#mobile {
-    color: white;
-    font-size: 20px;
-    float: left;
-    width: 70%;
-    margin-left: 350%;
-    margin-bottom: -80%;
-    text-indent: 0;
-}
-
 #btn-top {
     background: transparent;
     position: fixed;
@@ -310,7 +299,7 @@ h3 {
     }
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 1200px) {
     [class*="col-"] {
         width: 100%;
       }
@@ -320,5 +309,17 @@ h3 {
         background-size: cover;
         background-position: center;
     }
+    #mobile {
+        color: white;
+        font-size: 20px;
+        float: left;
+        width: 70%;
+        margin-left: 350%;
+        margin-bottom: -80%;
+        text-indent: 0;
+    }
+
+
+
     
 }
