@@ -287,12 +287,3 @@ h3 {
     text-decoration: none;
     font-style: italic;
 }
-
-@viewport {
-    width: device-width;
-    zoom: 1.0;
-}
-
-@-ms-viewport {
-    width: device-width;
-}
