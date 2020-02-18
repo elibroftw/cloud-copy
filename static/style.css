@@ -296,3 +296,9 @@ h3 {
 @-ms-viewport {
     width: device-width;
 }
+
+@media screen and (min-width:320px) and (max-width:736px) {
+    [class*="col-"] {
+        width: 100%;
+      }
+}
