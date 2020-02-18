@@ -10,8 +10,8 @@
 <body>
     <div class="row">
         <ul class="main-nav">
-            <li><a href="#about">About</a> </li>
-            <li><a href="#download">Download</a> </li>
+            <li><a id="nav-about" href="#about">About</a> </li>
+            <li><a id="nav-download" href="#download">Download</a> </li>
 
         </ul>
     </div>
@@ -29,7 +29,7 @@
         </div>
     </div>
 
-    <div id='about'>
+    <div id="about">
         <h2>About</h2>
         <div class="background">
             <div class="transbox">
@@ -92,9 +92,29 @@
         var ytVid = document.getElementsByTagName('iframe')[0];
         var toTopBtn = document.getElementById("btn-top");
 
+        function closeModal() {
+            modal.style.display = "none";
+            ytVid.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+            window.onclick = null;
+            document.onkeydown = null;
+        }
+
         function openModal() {
             modal.style.display = "block";
             ytVid.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+            // maybe focus on iframe?
+
+            // When the user clicks off the modal or presses Esc, close the modal
+            document.onkeydown =  function(e) {
+                if (e.key === "Escape") {
+                    closeModal();
+                }
+            }
+            window.onclick = function (event) {
+                if (event.target == modal) {
+                    closeModal();
+                }
+            }
         }
 
         function scrollFunction() {
@@ -109,15 +129,10 @@
         function topFunction() {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
+            document.getElementById("demo-btn").focus();
         }
 
-        // When the user clicks off the modal, close the modal
-        window.onclick = function (event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
-                ytVid.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-            }
-        }
+        
 
         // When the user scrolls down 20px from the top of the document, show the button
         window.onscroll = scrollFunction;

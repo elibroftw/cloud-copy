@@ -242,18 +242,10 @@ h3 {
 
 #btn-top {
     background: transparent;
-    position: fixed;
-    right: 1.2em;
-    bottom: 1.2em;
-    display: block;
     width: 48px;
     height: 48px;
     margin: 0;
-    padding: 0 1.2em;
-    border: 1px solid #3B2551;
-    border-radius: 2px;
     font-weight: bold;
-    text-transform: capitalize;
     line-height: 44px;
     display: none;
     position: fixed;
@@ -262,11 +254,11 @@ h3 {
     z-index: 99;
     font-size: 18px;
     border: none;
-    outline: none;
     color: white;
     cursor: pointer;
     padding: 15px;
     border-radius: 4px;
+    user-select: none;
 }
 
 #btn-top:hover {
