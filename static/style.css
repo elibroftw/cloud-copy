@@ -231,6 +231,16 @@ h3 {
 }
 
 
+#mobile {
+    color: white;
+    font-size: 20px;
+    float: left;
+    width: 70%;
+    margin-left: 350%;
+    margin-bottom: -80%;
+    text-indent: 0;
+}
+
 #btn-top {
     background: transparent;
     position: fixed;
@@ -310,25 +320,5 @@ h3 {
         background-size: cover;
         background-position: center;
     }
-    #mobile {
-        color: white;
-        font-size: 20px;
-        float: left;
-        width: 70%;
-        margin-left: 350%;
-        margin-bottom: -80%;
-        text-indent: 0;
-    }
-    #windows {
-        display: none;
-    }
     
-    #linux {
-        display: none;
-    }
-
-    #mac {
-        display: none;
-    }
-
 }
