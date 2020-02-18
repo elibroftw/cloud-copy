@@ -288,6 +288,7 @@ h3 {
     font-style: italic;
 }
 
+
 @viewport {
     width: device-width;
     zoom: 1.0;
@@ -297,7 +298,7 @@ h3 {
     width: device-width;
 }
 
-@media screen and (min-width:320px) and (max-width:736px) {
+@media screen and (min-width:320px) and (max-width:768px) {
     [class*="col-"] {
         width: 100%;
       }
