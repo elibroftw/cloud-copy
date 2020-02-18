@@ -286,6 +286,12 @@ h3 {
 @-ms-viewport {
     width: device-width;
 }
+
+
+#mobile{
+    display: none;
+}
+
 /*
 @media screen and (min-width:320px) and (max-width:768px) {
     [class*="col-"] {
@@ -301,24 +307,22 @@ h3 {
 
 */
 
-#mobile{
-    display: none;
-}
 
 @media only screen and (max-width: 1200px) {
     [class*="col-"] {
         width: 100%;
       }
+
       body {
         background-image: url("/static/images/background.jpg");
-        height: 100vh;
+        height: 250vh;
         background-size: cover;
         background-position: center;
     }
     #mobile {
         color: white;
-        font-size: 20px;
-        float: left;
+        font-size: 100px;
+       /* float: left; */
        /* width: 70%; */
        /* margin-left: 350%;*/
         /*margin-bottom: -80%;*/
