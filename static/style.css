@@ -231,7 +231,7 @@ h3 {
 }
 
 #linux {
-    color: white;
+    color: black;
     font-size: 20px;
     float: left;
     width: 100%;
@@ -252,7 +252,7 @@ h3 {
 }
 
   #btn-top {
-      background: transparent;
+    background: transparent;
     position: fixed;
     right: 1.2em;
     bottom: 1.2em;
