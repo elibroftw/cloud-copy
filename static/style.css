@@ -323,7 +323,15 @@ h3 {
         text-indent: 0;
     }
 
+    #windows {
+        display: none;
+    }
 
+    #mac {
+        display: none;
+    }
 
-    
+    #linux {
+        display: none;
+    } 
 }
