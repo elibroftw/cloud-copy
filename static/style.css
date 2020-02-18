@@ -1,3 +1,5 @@
+@media only screen and (min-width: 2500px) {
+
 html {
     scrollbar-color: #666 #363636;
 }
@@ -276,6 +278,7 @@ h3 {
     text-decoration: none;
     font-style: italic;
 }
+}
 
 
 @viewport {
@@ -291,6 +294,7 @@ h3 {
 #mobile{
     display: none;
 }
+
 
 /*
 @media screen and (min-width:320px) and (max-width:768px) {
