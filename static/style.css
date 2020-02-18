@@ -286,7 +286,7 @@ h3 {
 @-ms-viewport {
     width: device-width;
 }
-
+/*
 @media screen and (min-width:320px) and (max-width:768px) {
     [class*="col-"] {
         width: 100%;
@@ -298,6 +298,8 @@ h3 {
         background-position: center;
     }
 }
+
+*/
 
 #mobile{
     display: none;
