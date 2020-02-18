@@ -309,7 +309,7 @@ h3 {
       }
       body {
         background-image: url("/static/images/background.jpg");
-        height: 435vh;
+        height: 100vh;
         background-size: cover;
         background-position: center;
     }
