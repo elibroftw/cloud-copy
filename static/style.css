@@ -319,9 +319,9 @@ h3 {
         color: white;
         font-size: 20px;
         float: left;
-        width: 70%;
-        margin-left: 350%;
-        margin-bottom: -80%;
+       /* width: 70%; */
+       /* margin-left: 350%;*/
+        /*margin-bottom: -80%;*/
         text-indent: 0;
     }
 
