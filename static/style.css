@@ -1,5 +1,3 @@
-@media only screen and (min-width: 1024px) {
-
 html {
     scrollbar-color: #666 #363636;
 }
@@ -110,8 +108,8 @@ h2 {
 
 #download {
     position: absolute;
-    bottom: -360px;
-    margin-left: -3.4%;
+    bottom: -355px;
+    margin-left: -7.7%;
 }
 
 h3 {
@@ -232,6 +230,17 @@ h3 {
     text-indent: 0;
 }
 
+
+#mobile {
+    color: white;
+    font-size: 20px;
+    float: left;
+    width: 70%;
+    margin-left: 350%;
+    margin-bottom: -80%;
+    text-indent: 0;
+}
+
 #btn-top {
     background: transparent;
     position: fixed;
@@ -278,285 +287,12 @@ h3 {
     text-decoration: none;
     font-style: italic;
 }
-#mobile{
-    display: none;
+
+@viewport {
+    width: device-width;
+    zoom: 1.0;
 }
 
-}
-
-
-@media only screen and (max-width: 768px) {
-    [class*="col-"] {
-        width: 100%;
-      }
-
-      html {
-        scrollbar-color: #666 #363636;
-    }
-    
-    ::-webkit-scrollbar {
-        width: 15px;
-    }
-    
-    * {
-        margin: 0;
-        padding: 0;
-    }
-    
-    body {
-        background-image: url("/static/images/background.jpg");
-        height: 250vh;
-        background-size: cover;
-        background-position: center;
-    }
-    
-    .main-nav {
-        float: right;
-        list-style: none;
-        margin-top: 30px;
-    }
-    
-    .main-nav li {
-        display: inline-block;
-    
-    }
-    
-    .main-nav li a {
-        border-radius: 1em;
-        color: white;
-        text-decoration: none;
-        padding: 5px 40px;
-        font-family: 'Ubuntu';
-        font-size: 25px;
-    }
-    .main-nav li.active a {
-        border: 1px solid white;
-    
-    }
-    .main-nav li a:hover {
-        /* border: 1px solid white; */
-        /* font-size: xx-large; */
-        background-color: rgb(0, 0, 0, 0.5);
-    }
-    
-    #logo {
-        width: 120px;
-        height: auto;
-        float: none;
-    }
-    
-    body {
-        font-family: monospace;
-    }
-    
-    .row {
-        max-width: 1500px;
-        margin: auto;
-    }
-    
-    .hero {
-        position: absolute;
-        /* width: 1200px; */
-        margin-left: 23%;
-        /* margin-top: 0; */
-        margin-top: 250px;
-    }
-    
-    h1 {
-        color: white;
-        text-transform: uppercase;
-        font-family: 'Offside';
-        font-size: 100px;
-        text-align: center;
-    }
-    
-    p {
-        margin-left: 5%;
-        margin-right: 10%;
-        color: white;
-        font-size: 25px;
-        border: 1mm black;
-    }
-    
-    #about {
-        position: absolute;
-        bottom: -280px;
-    }
-    
-    h2 {
-        color: black;
-        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-        font-size: 30px;
-        text-align: left;
-        margin-right: 100%;
-        width: 50%;
-        margin-bottom: 1%;
-        margin-left: 5%;
-    }
-    
-    #download {
-        position: absolute;
-        bottom: -360px;
-        margin-left: -3.4%;
-    }
-    
-    h3 {
-        color: black;
-        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-        font-size: 30px;
-        text-align: left;
-        margin-right: 100%;
-        width: 50%;
-        margin-bottom: 2%;
-        margin-left: 50%;
-    }
-    
-    #demo-btn {
-        margin-top: 30px;
-        margin-left: 40%;
-    }
-    
-    .btn {
-        border: 1px solid rgb(210, 210, 210);
-        padding: 30px 30px;
-        color: white;
-        text-decoration: none;
-        margin-right: 5px;
-        font-size: 25px;
-        text-transform: uppercase;
-        position: absolute;
-        bottom: -230px;
-        border-radius: .5em;
-    }
-    
-    .btn-one {
-        background-color: darkcyan;
-        font-family: 'Ubuntu';
-    }
-    
-    .btn-one:hover {
-        cursor: pointer;
-        background-color: rgb(0, 0, 0, 0.6);
-        transition: all 0.3s ease-in;
-        border-color: rgb(0, 0, 0, 0.6);
-    }
-    
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 200;
-        padding-top: 100px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        text-align: center;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.5);
-        align-content: center;
-    }
-    
-    /* Modal Content */
-    .modal-content {
-        background-color: #121212;
-        margin: auto;
-        align-content: center;
-        padding: 1px;
-        border: .5px solid black;
-    }
-    
-    /* The Close Button */
-    .close {
-        color: #aaaaaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-    
-    .close:hover,
-    .close:focus {
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
-    }
-    
-    @media screen and (max-width: 535px) {
-        #model {
-            width: 100%;
-            height: 100%;
-        }
-    
-        #map {
-            height: 60%;
-        }
-    }
-    
-    
-    #btn-top {
-        background: transparent;
-        position: fixed;
-        right: 1.2em;
-        bottom: 1.2em;
-        display: block;
-        width: 48px;
-        height: 48px;
-        margin: 0;
-        padding: 0 1.2em;
-        border: 1px solid #3B2551;
-        border-radius: 2px;
-        font-weight: bold;
-        text-transform: capitalize;
-        line-height: 44px;
-        display: none;
-        position: fixed;
-        bottom: 20px;
-        right: 10px;
-        z-index: 99;
-        font-size: 18px;
-        border: none;
-        outline: none;
-        /* background-color: rgb(0, 0, 0, 0.5); */
-        color: white;
-        cursor: pointer;
-        padding: 15px;
-        border-radius: 4px;
-    }
-    
-    #btn-top:hover {
-        background-color: rgb(150, 150, 150, 0.5);
-    }
-    
-    .dl-link,
-    .dl-link:visited {
-        color: darkcyan;
-        color: darkgrey;
-        background-color: rgb(0, 0, 0, 0.5);
-        border-radius: 1em;
-        padding-right: 5px;
-        padding-left: 5px;
-        margin-bottom: 10%;
-        text-decoration: none;
-        font-style: italic;
-    }
-    #mobile {
-        color: white;
-        font-size: 100px;
-        float: left;
-        width: 70%; 
-        margin-left: 350%;
-        margin-bottom: -80%;
-        text-indent: 0;
-    }
-    #windows {
-        display: none;
-    }
-
-    #mac {
-        display: none;
-    }
-
-    #linux {
-        display: none;
-    }
-    
+@-ms-viewport {
+    width: device-width;
 }
