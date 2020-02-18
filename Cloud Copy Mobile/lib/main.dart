@@ -58,12 +58,29 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  /* cock and ball torture
+  wtfisthistypefunction contentAsBytes(password) {
+    const Utf8Encoder();
+    password_b = Utf8Encoder(password); // passwor value from line below??
+
+
+
+
+
+
+  }
+  end of cock and ball torture
+*/
+
   _loginPressed() async {
     email = emailController.text.trim();
     String password = passwordController.text;
 
-    if (email == "" || password == "") {
-      print("All fields must be completed");
+    if (email == "") {
+      print("Please enter an email address");
+    }
+    if (password == "") {
+      print("Please enter the password");
 //      TODO: focus on empty field
     } else {
       var url = baseURL + '/authenticate/';
