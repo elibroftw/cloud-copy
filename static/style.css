@@ -278,6 +278,10 @@ h3 {
     text-decoration: none;
     font-style: italic;
 }
+#mobile{
+    display: none;
+}
+
 }
 
 
@@ -291,9 +295,6 @@ h3 {
 }
 
 
-#mobile{
-    display: none;
-}
 
 
 /*
@@ -326,13 +327,12 @@ h3 {
     #mobile {
         color: white;
         font-size: 100px;
-       /* float: left; */
-       /* width: 70%; */
-       /* margin-left: 350%;*/
-        /*margin-bottom: -80%;*/
+        float: left;
+        width: 70%; 
+        margin-left: 350%;
+        margin-bottom: -80%;
         text-indent: 0;
     }
-/*
     #windows {
         display: none;
     }
@@ -345,5 +345,4 @@ h3 {
         display: none;
     }
     
-    */
 }
