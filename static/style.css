@@ -310,7 +310,7 @@ h3 {
     }
 }
 
-@media screen and (orientation: landscape) {
+@media only screen and (max-width: 800px) {
     [class*="col-"] {
         width: 100%;
       }
