@@ -1,4 +1,4 @@
-# cloud-copy
+# Cloud Copy
 
 Cloud Copy is a novel solution to clipboard management. It allows you to copy something on one device, and paste it directly into another, seamlessly.
 
