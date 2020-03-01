@@ -22,6 +22,8 @@ import javax.crypto.MacSpi
 import javax.crypto.spec.SecretKeySpec
 import javax.crypto.spec.PBEKeySpec
 import khttp.post
+import khttp.get
+import com.google.gson.*
 
 //import klaxon.JsonObject
 internal class MyService:Service() {
@@ -38,8 +40,8 @@ internal class MyService:Service() {
         KEY = mPrefs.getString("flutter.key", "").toByteArray()
 
         val queue = Volley.newRequestQueue(this)
-        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        var currentCopy = clipboard.getPrimaryClip().getItemAt(0).text.toString()
+        val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
+        var currentCopy = clipboard?.getPrimaryClip()?.getItemAt(0)?.text.toString()
         var lastUpdate = Date(System.currentTimeMillis())
         println("lastUpdate = " + lastUpdate) // TODO: better format
 //        ClipData.newPlainText("text", et_copy_text.text);
@@ -47,17 +49,26 @@ internal class MyService:Service() {
         val getNewCopyURL = "${BASE_URL}newest-copy/?token=${token}"
         val sendNewCopyURL = "${BASE_URL}share-copy/"
         var newCopy = ""
+        val gson = Gson()
         while (true) {
             // TODO: try catch no internet error
-            newCopy = clipboard.getPrimaryClip().getItemAt(0).text.toString()
+            newCopy = clipboard?.getPrimaryClip()?.getItemAt(0)?.text.toString()
             if (currentCopy != newCopy) {
                 // TODO: make a post request to share-copy
 //                currentCopy = newCopy
 //                val stringRequest = StringRequest(Request.Method.POST, sendNewCopyURL,
                 post(sendNewCopyURL, data=mapOf("token" to token, "contents" to encrypt(newCopy)))
-//                        )
+//                        
             } else {
-
+                // var resp = get(getNewCopyURL).text
+                // if resp != 'false':
+                //     resp = gson.fromJson(resp, Article::class.java)  // now a map
+                //     new_copy = decrypt(resp.get("current_copy")).toString()
+                //     timestamp = resp.get("timestamp")
+                //     if new_copy != current_text and last_update < timestamp:
+                //         last_update = timestamp
+                //         current_text = new_copy
+                //         pyperclip.copy(new_copy)
                 // get request to newest-copy/?token=
                 // check if resp is not false
                 // then check if currentCopy != newCopy and

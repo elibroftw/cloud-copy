@@ -45,18 +45,6 @@ def check_password(plain_text_password: str, hashed_password):
     return bcrypt.checkpw(plain_text_password.encode('utf-8'), hashed_password)
 
 
-# def create_key(provided_password: str) -> bytes:
-#     password_b = provided_password.encode()  # Convert to type bytes
-#     kdf = PBKDF2HMAC(
-#         algorithm=hashes.SHA256(),
-#         length=32,  # TODO: change to 256
-#         salt=b'',
-#         iterations=100000,
-#         backend=default_backend())
-#     key = base64.urlsafe_b64encode(kdf.derive(password_b))  # Can only use kdf once
-#     return key
-
-
 @app.errorhandler(404)
 def page_not_found(_):
     return render_template('home.html'), 404
@@ -90,8 +78,6 @@ def authenticate():
             tokens.insert_one({'token': new_token, 'email': email, 'created': datetime.today()})
             new_user = {'email': email, 'password': hashed_password, 'tokens': [new_token]}
             users.insert_one(new_user)
-            # TODO: send an email to welcome user to Cloud Copy upon sign up
-            # TODO: in 0.1.3a send {'token': new_token, 'key': create_key(password)}
             return new_token
         else:  # user does exist
             if check_password(password, user['password']):
@@ -101,7 +87,6 @@ def authenticate():
                 tokens.insert_one({'token': new_token, 'email': email, 'created': datetime.today()})
                 user_tokens = user['tokens'] + [new_token]
                 users.update_one({'email': email}, {'$set': {'tokens': user_tokens}})
-                # TODO: in 0.1.3a send {'token': new_token, 'key': create_key(password)}
                 return new_token
     return 'false'
 

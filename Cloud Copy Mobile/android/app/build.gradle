@@ -66,5 +66,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'com.beust:klaxon:5.0.1'
-    implementation "khttp:khttp:1.0.0"
+    implementation 'khttp:khttp:1.0.0'
+    implementation 'com.google.code.gson:gson:2.8.6'
 }

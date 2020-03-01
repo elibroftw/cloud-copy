@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,22 +9,17 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:password_hash/pbkdf2.dart';
 import 'package:password_hash/salt.dart';
+//import "package:threading/threading.dart";
 
-List<int> generateKey(String password) {
-  var generator = new PBKDF2();
-  var salt = Salt.generateAsBase64String(0);
-  var hash = generator.generateKey(password, salt, 100000, 32);
-  return hash;
-}
+String email;
+SendPort newIsolateSendPort;
+Isolate newIsolate;
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(new MyApp());
 }
-
-String email;
-String token;
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -35,7 +31,7 @@ class MyApp extends StatelessWidget {
         // This is the theme of your application.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Login'),
+      home: MyHomePage(),
     );
   }
 }
@@ -54,17 +50,29 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController emailController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   final String baseURL = 'http://167.99.191.206/';
+  String token;
+  
 
-  void startServiceInPlatform() async {
+  static void startServiceInPlatform(SendPort callerSendPort) {
+    ReceivePort newIsolateReceivePort = ReceivePort();
+    callerSendPort.send(newIsolateReceivePort.sendPort);
+
     if (Platform.isAndroid) {
       const platform = const MethodChannel('com.cloud_copy.monitor');
-      debugPrint("starting service");
+      print("starting service");
       platform.invokeMethod("startService");
-      debugPrint("started service");
+      print("started service");
     } else {
       // iOS
-      debugPrint('iOS Not implemented yet'); // TODO
+      print('iOS Not implemented yet');
     }
+  }
+
+  List<int> generateKey(String password) {
+    var generator = new PBKDF2();
+    var salt = Salt.generateAsBase64String(0);
+    var hash = generator.generateKey(password, salt, 100000, 32);
+    return hash;
   }
 
   _loginPressed() async {
@@ -72,22 +80,20 @@ class _MyHomePageState extends State<MyHomePage> {
     String password = passwordController.text;
 
     if (email == "") {
-      debugPrint("Please enter an email address");
+      print("Please enter an email address");
     }
     if (password == "") {
-      debugPrint("Please enter the password");
+      print("Please enter the password");
 //      TODO: focus on empty field
     } else {
       var url = baseURL + '/authenticate/';
       var response =
           await http.post(url, body: {'email': email, 'password': password});
       token = response.body;
-//      Map valueMap = json.decode(response.body);
-//      token = valueMap['token'];
-//      String encryptionKey = valueMap['key']; // b64
-      if (token == '') {
-        // TODO: change back to false
-        // text about invalid email/password
+      print(token)
+      if (token == 'false') {
+        print("incorrect email/password");
+        // update text about invalid email/password
       } else {
         // Update gui to "logging in"
         List<int> key = generateKey(password);
@@ -99,7 +105,14 @@ class _MyHomePageState extends State<MyHomePage> {
           context,
           MaterialPageRoute(builder: (context) => AccountPage()),
         );
-        startServiceInPlatform();
+        print("1 2 3");
+        debugPrint("1 2 3");
+        ReceivePort receivePort = ReceivePort();
+        newIsolate = await Isolate.spawn(
+          startServiceInPlatform,
+          receivePort.sendPort,
+        );
+        newIsolateSendPort = await receivePort.first;
       }
     }
   }
@@ -184,6 +197,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class AccountPage extends StatefulWidget {
   AccountPage({Key key, this.title}) : super(key: key);
+  // TODO: on data connect option
 
   final String title;
 
@@ -194,6 +208,12 @@ class AccountPage extends StatefulWidget {
 class _AccountPageState extends State<AccountPage> {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20);
   final String baseURL = 'http://167.99.191.206/';
+
+  void logOut() {
+    Navigator.pop(context);
+    newIsolate?.kill(priority: Isolate.immediate);
+    newIsolate = null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -209,9 +229,7 @@ class _AccountPageState extends State<AccountPage> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {
-          Navigator.pop(context);
-        },
+        onPressed: logOut,
         child: Text("Logout",
             textAlign: TextAlign.center,
             style: style.copyWith(
