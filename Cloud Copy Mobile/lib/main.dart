@@ -1,12 +1,20 @@
-import 'package:flutter/material.dart';
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:steel_crypt/steel_crypt.dart';
-import 'package:flutter/services.dart';
+import 'package:password_hash/pbkdf2.dart';
+import 'package:password_hash/salt.dart';
+
+List<int> generateKey(String password) {
+  var generator = new PBKDF2();
+  var salt = Salt.generateAsBase64String(0);
+  var hash = generator.generateKey(password, salt, 100000, 32);
+  return hash;
+}
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -47,30 +55,16 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController passwordController = new TextEditingController();
   final String baseURL = 'http://167.99.191.206/';
 
-
   void startServiceInPlatform() async {
-    if(Platform.isAndroid){
+    if (Platform.isAndroid) {
       const platform = const MethodChannel('com.cloud_copy.monitor');
       String data = await platform.invokeMethod("startService");
       debugPrint(data);
-    } else { // iOS
-      print('Not implemented yet');  // TODO
+    } else {
+      // iOS
+      print('Not implemented yet'); // TODO
     }
   }
-
-  /* cock and ball torture
-  wtfisthistypefunction contentAsBytes(password) {
-    const Utf8Encoder();
-    password_b = Utf8Encoder(password); // passwor value from line below??
-
-
-
-
-
-
-  }
-  end of cock and ball torture
-*/
 
   _loginPressed() async {
     email = emailController.text.trim();
@@ -86,17 +80,20 @@ class _MyHomePageState extends State<MyHomePage> {
       var url = baseURL + '/authenticate/';
       var response =
           await http.post(url, body: {'email': email, 'password': password});
-//      token = response.body;
-      Map valueMap = json.decode(response.body);
-      token = valueMap['token'];
-      String cryptionKey = valueMap['key']; // b64
-      if (token == '') {  // TODO: change back to false
+      token = response.body;
+//      Map valueMap = json.decode(response.body);
+//      token = valueMap['token'];
+//      String encryptionKey = valueMap['key']; // b64
+      if (token == '') {
+        // TODO: change back to false
         // text about invalid email/password
       } else {
+        // Update gui to "logging in"
+        List<int> key = generateKey(password);
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('email', email);
         prefs.setString('token', token);
-        prefs.setString('cryptionKey', cryptionKey);
+        prefs.setString('key', base64.encode(key));
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => AccountPage()),
@@ -195,7 +192,7 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20);
-  final String BASE_URL = 'http://167.99.191.206/';
+  final String baseURL = 'http://167.99.191.206/';
 
   @override
   Widget build(BuildContext context) {
@@ -232,7 +229,9 @@ class _AccountPageState extends State<AccountPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SizedBox(height: 155.0, child: Image.asset(
+                SizedBox(
+                  height: 155.0,
+                  child: Image.asset(
                     "assets/logo.png",
                     fit: BoxFit.contain,
                   ),

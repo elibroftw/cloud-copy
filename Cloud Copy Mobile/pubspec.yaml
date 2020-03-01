@@ -15,6 +15,7 @@
       http: ^0.12.0+4
       shared_preferences: ^0.4.3
       steel_crypt: ^1.7.1+1
+      password_hash: ^2.0.0
       # The following adds the Cupertino Icons font to your application.
       # Use with the CupertinoIcons class for iOS style icons.
       cupertino_icons: ^0.1.2

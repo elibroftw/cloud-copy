@@ -20,11 +20,13 @@ import javax.crypto.Mac
 import javax.crypto.MacSpi
 import javax.crypto.spec.SecretKeySpec
 import javax.crypto.spec.PBEKeySpec
+import khttp.post
 
 //import klaxon.JsonObject
 
 internal class MyService:Service() {
     private val BASE_URL = "http://167.99.191.206/"
+    private final val KEY;
     override fun onCreate() {
         super.onCreate();
         // what is startForeground?
@@ -33,8 +35,7 @@ internal class MyService:Service() {
 //        val mPrefs = activity?.getPreferences(Context.MODE_PRIVATE)
         val email = mPrefs.getString("flutter.email", "")
         val token = mPrefs.getString("flutter.token", "")
-        val cryptionKey = mPrefs.getString("flutter.cryptionKey", "").toByteArray()
-        // b64 -> ByteArray, charset("UTF8")?
+        KEY = mPrefs.getString("flutter.key", "").toByteArray()
 
         val queue = Volley.newRequestQueue(this)
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -45,51 +46,48 @@ internal class MyService:Service() {
 //        myClipboard?.setPrimaryClip(myClip);
         val getNewCopyURL = "${BASE_URL}newest-copy/?token=${token}"
         val sendNewCopyURL = "${BASE_URL}share-copy/"
-//        var newCopy
-//        while true {
-//            // TODO: try catch no internet error
-//            newCopy = clipboard.getPrimaryClip().getItemAt(0).text.toString()
-//            if currentCopy != newCopy {
-//                // TODO: make a post request to share-copy
-////                currentCopy = newCopy
-//            } else {
-//
-//                val stringRequest = StringRequest(Request.Method.GET, getNewCopyURL,
-//                        Response.Listener<String> { response ->
-//                            val json: JsonObject = Parser().parse(response) as JsonObject
-//                            newCopy = decrypt(key, json.get('current_copy'))
-//                            var timestamp = json.get('timestamp')
-//                            timestamp = Timestamp.valueOf(timestamp)
-//                            Response.ErrorListener { println("That didn't work!")})
-//                    queue.add(stringRequest)
-//
-//
-//                // get request to newest-copy/?token=
-//                // check if resp is not false
-//                // then check if currentCopy != newCopy and
-//                // if the time given > lastUpdate
-//                // if false, post a notification to tell user to log in again
-//            }
-//            Thread.sleep(1500)
-//        }
+        var newCopy
+        while true {
+            // TODO: try catch no internet error
+            newCopy = clipboard.getPrimaryClip().getItemAt(0).text.toString()
+            if currentCopy != newCopy {
+                // TODO: make a post request to share-copy
+//                currentCopy = newCopy
+//                val stringRequest = StringRequest(Request.Method.POST, sendNewCopyURL,
+                post(sendNewCopyURL, data=mapOf("token" to token, "contents" to encrypt(newCopy)))
+//                        )
+            } else {
+
+                val stringRequest = StringRequest(Request.Method.GET, getNewCopyURL,
+                        Response.Listener<String> { response ->
+                            val json: JsonObject = Parser().parse(response) as JsonObject
+                            newCopy = decrypt(KEY, json.get('current_copy'))
+                            var timestamp = json.get('timestamp')
+                            timestamp = Timestamp.valueOf(timestamp)
+                            Response.ErrorListener { println("That didn't work!")}})
+                    queue.add(stringRequest)
+
+
+                // get request to newest-copy/?token=
+                // check if resp is not false
+                // then check if currentCopy != newCopy and
+                // if the time given > lastUpdate
+                // if false, post a notification to tell user to log in again
+            }
+            Thread.sleep(1500)
+            }
+        }
     }
 
-    fun encrypt(key: ByteArray, text: String): String {
-//        val skey = SecretKeySpec(keyBytes,)
-//        val input = text.toByteArray(charset("UTF8"))
-        // Generate secret key for HmacSHA256
-//        val kg = KeyGenerator.getInstance("HmacSHA256")
-//        val sk = kg.generateKey()
-//
-//        // Get instance of Mac object implementing HmacSHA256, and
-//        // initialize it with the above secret key
-//        val mac = Mac.getInstance("HmacSHA256")
-//        mac.init(sk)
-//        val result = mac.doFinal("Hi There".getBytes())
-        return ""
+    fun encrypt(text: String): bytes {
+        val skey = SecretKeySpec(KEY)
+        byte[] bytes = hmac("HmacSHA256", KEY.getBytes(), text.getBytes());
+
+        return bytes
+        // HmacSHA256
     }
 
-    fun decrypt(key: ByteArray, text: String): String {
+    fun decrypt(text: String): String {
         // TODO
         return ""
     }

@@ -8,6 +8,7 @@ import time
 import traceback
 # import uuid
 try:
+    # TODO: set all data into a .prefs file
     import PySimpleGUI as sg
     import requests
     from requests.exceptions import ConnectionError
@@ -45,7 +46,7 @@ try:
         from winerror import ERROR_ALREADY_EXISTS
         mutex = win32event.CreateMutex(None, False, 'name')
         last_error = win32api.GetLastError()
-        if last_error == ERROR_ALREADY_EXISTS: sys.exit()
+        # if last_error == ERROR_ALREADY_EXISTS: sys.exit()
         user = getuser()
         shortcut_path = f'C:/Users/{user}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/Cloud Copy.lnk'
         if not os.path.exists(shortcut_path):
@@ -102,11 +103,11 @@ try:
         return Fernet(key).decrypt(encrypted)
 
 
-    def create_key(provided_password: str) -> bytes:
+    def generate_key(provided_password: str) -> bytes:
         password_b = provided_password.encode()  # Convert to type bytes
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
-            length=32,  # TODO: change to 256
+            length=32,  # TODO: change to 256?
             salt=b'',
             iterations=100000,
             backend=default_backend())
@@ -164,7 +165,7 @@ try:
                         # TODO: in 0.1.3a resp will be {'token': new_token, 'key': create_key(password)}
                         token = resp
                         with open('.token', 'w') as f: f.write(email + '\n' + token)
-                        create_key(password)
+                        generate_key(password)
                         logged_in = True
                         time.sleep(0.5)
                 except ConnectionError:
