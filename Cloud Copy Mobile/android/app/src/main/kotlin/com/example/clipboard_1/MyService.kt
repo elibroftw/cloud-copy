@@ -5,6 +5,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import androidx.annotation.Nullable
 import androidx.core.app.NotificationCompat
 import android.content.SharedPreferences
@@ -23,10 +24,9 @@ import javax.crypto.spec.PBEKeySpec
 import khttp.post
 
 //import klaxon.JsonObject
-// TODO: use var instead of val in some cases
 internal class MyService:Service() {
     private val BASE_URL = "http://167.99.191.206/"
-    private val KEY = []
+    private lateinit var KEY: ByteArray
     override fun onCreate() {
         super.onCreate();
         // what is startForeground?
@@ -41,16 +41,16 @@ internal class MyService:Service() {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         var currentCopy = clipboard.getPrimaryClip().getItemAt(0).text.toString()
         var lastUpdate = Date(System.currentTimeMillis())
-        println(lastUpdate) // TODO: better format
+        println("lastUpdate = " + lastUpdate) // TODO: better format
 //        ClipData.newPlainText("text", et_copy_text.text);
 //        myClipboard?.setPrimaryClip(myClip);
         val getNewCopyURL = "${BASE_URL}newest-copy/?token=${token}"
         val sendNewCopyURL = "${BASE_URL}share-copy/"
-        var newCopy
-        while true {
+        var newCopy = ""
+        while (true) {
             // TODO: try catch no internet error
             newCopy = clipboard.getPrimaryClip().getItemAt(0).text.toString()
-            if currentCopy != newCopy {
+            if (currentCopy != newCopy) {
                 // TODO: make a post request to share-copy
 //                currentCopy = newCopy
 //                val stringRequest = StringRequest(Request.Method.POST, sendNewCopyURL,
@@ -68,22 +68,18 @@ internal class MyService:Service() {
             }
         }
 
-    fun encrypt(text: String): bytes {
-        val skey = SecretKeySpec(KEY)
+    fun encrypt(text: String): ByteArray {
         val algorithm = "HmacSHA256"
-        Mac mac = Mac.getInstance(algorithm)
-        mac.init(new SecretKeySpec(KEY, algorithm))
-        return mac.doFinal(text.getBytes())
+        val mac = Mac.getInstance(algorithm)
+        mac.init(SecretKeySpec(KEY, algorithm))
+        return mac.doFinal(text.toByteArray())
     }
 
-    fun decrypt(text: String): String {
-        val skey = SecretKeySpec(KEY)
-        print(skey.decode(text.getBytes()).toString())
+    fun decrypt(text: String): ByteArray {
         val algorithm = "HmacSHA256"
-        Mac mac = Mac.getInstance(algorithm)
-        text.getBytes()
-        mac.init(new SecretKeySpec(KEY, algorithm))
-        return mac.doFinal()
+        val mac = Mac.getInstance(algorithm)
+        mac.init(SecretKeySpec(KEY, algorithm))
+        return mac.doFinal(text.toByteArray())
     }
 
     @Nullable

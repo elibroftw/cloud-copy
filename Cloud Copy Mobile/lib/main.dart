@@ -58,11 +58,12 @@ class _MyHomePageState extends State<MyHomePage> {
   void startServiceInPlatform() async {
     if (Platform.isAndroid) {
       const platform = const MethodChannel('com.cloud_copy.monitor');
-      String data = await platform.invokeMethod("startService");
-      debugPrint(data);
+      debugPrint("starting service");
+      platform.invokeMethod("startService");
+      debugPrint("started service");
     } else {
       // iOS
-      print('Not implemented yet'); // TODO
+      debugPrint('iOS Not implemented yet'); // TODO
     }
   }
 
@@ -71,10 +72,10 @@ class _MyHomePageState extends State<MyHomePage> {
     String password = passwordController.text;
 
     if (email == "") {
-      print("Please enter an email address");
+      debugPrint("Please enter an email address");
     }
     if (password == "") {
-      print("Please enter the password");
+      debugPrint("Please enter the password");
 //      TODO: focus on empty field
     } else {
       var url = baseURL + '/authenticate/';
