@@ -23,10 +23,10 @@ import javax.crypto.spec.PBEKeySpec
 import khttp.post
 
 //import klaxon.JsonObject
-
+// TODO: use var instead of val in some cases
 internal class MyService:Service() {
     private val BASE_URL = "http://167.99.191.206/"
-    private final val KEY;
+    private val KEY = []
     override fun onCreate() {
         super.onCreate();
         // what is startForeground?
@@ -58,16 +58,6 @@ internal class MyService:Service() {
 //                        )
             } else {
 
-                val stringRequest = StringRequest(Request.Method.GET, getNewCopyURL,
-                        Response.Listener<String> { response ->
-                            val json: JsonObject = Parser().parse(response) as JsonObject
-                            newCopy = decrypt(KEY, json.get('current_copy'))
-                            var timestamp = json.get('timestamp')
-                            timestamp = Timestamp.valueOf(timestamp)
-                            Response.ErrorListener { println("That didn't work!")}})
-                    queue.add(stringRequest)
-
-
                 // get request to newest-copy/?token=
                 // check if resp is not false
                 // then check if currentCopy != newCopy and
@@ -77,20 +67,25 @@ internal class MyService:Service() {
             Thread.sleep(1500)
             }
         }
-    }
 
     fun encrypt(text: String): bytes {
         val skey = SecretKeySpec(KEY)
-        byte[] bytes = hmac("HmacSHA256", KEY.getBytes(), text.getBytes());
-
-        return bytes
-        // HmacSHA256
+        val algorithm = "HmacSHA256"
+        Mac mac = Mac.getInstance(algorithm)
+        mac.init(new SecretKeySpec(KEY, algorithm))
+        return mac.doFinal(text.getBytes())
     }
 
     fun decrypt(text: String): String {
-        // TODO
-        return ""
+        val skey = SecretKeySpec(KEY)
+        print(skey.decode(text.getBytes()).toString())
+        val algorithm = "HmacSHA256"
+        Mac mac = Mac.getInstance(algorithm)
+        text.getBytes()
+        mac.init(new SecretKeySpec(KEY, algorithm))
+        return mac.doFinal()
     }
+
     @Nullable
     override fun onBind(intent:Intent): IBinder? {
         return null;
