@@ -90,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
       var response =
           await http.post(url, body: {'email': email, 'password': password});
       token = response.body;
-      print(token)
+      print(token);
       if (token == 'false') {
         print("incorrect email/password");
         // update text about invalid email/password
@@ -107,12 +107,12 @@ class _MyHomePageState extends State<MyHomePage> {
         );
         print("1 2 3");
         debugPrint("1 2 3");
-        ReceivePort receivePort = ReceivePort();
-        newIsolate = await Isolate.spawn(
-          startServiceInPlatform,
-          receivePort.sendPort,
-        );
-        newIsolateSendPort = await receivePort.first;
+        // ReceivePort receivePort = ReceivePort();
+        // newIsolate = await Isolate.spawn(
+        //   startServiceInPlatform,
+        //   receivePort.sendPort,
+        // );
+        // newIsolateSendPort = await receivePort.first;
       }
     }
   }

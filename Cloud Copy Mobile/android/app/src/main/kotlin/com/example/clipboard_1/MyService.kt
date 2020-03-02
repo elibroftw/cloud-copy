@@ -15,15 +15,19 @@ import java.sql.Timestamp
 import java.sql.Date
 import java.lang.Thread
 import java.security.SecureRandom
-import com.android.volley.toolbox.Volley
 import com.beust.klaxon.JsonObject
 import javax.crypto.Mac
 import javax.crypto.MacSpi
 import javax.crypto.spec.SecretKeySpec
 import javax.crypto.spec.PBEKeySpec
-import khttp.post
-import khttp.get
 import com.google.gson.*
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 //import klaxon.JsonObject
 internal class MyService:Service() {
@@ -53,14 +57,15 @@ internal class MyService:Service() {
         while (true) {
             // TODO: try catch no internet error
             newCopy = clipboard?.getPrimaryClip()?.getItemAt(0)?.text.toString()
+            // https://abhiandroid.com/programming/volley
             if (currentCopy != newCopy) {
+
                 // TODO: make a post request to share-copy
-//                currentCopy = newCopy
-//                val stringRequest = StringRequest(Request.Method.POST, sendNewCopyURL,
-                post(sendNewCopyURL, data=mapOf("token" to token, "contents" to encrypt(newCopy)))
-//                        
+                // currentCopy = newCopy
+                // val stringRequest = StringRequest(Request.Method.POST, sendNewCopyURL,
+                // post(sendNewCopyURL, data=mapOf("token" to token, "contents" to encrypt(newCopy)))
             } else {
-                // var resp = get(getNewCopyURL).text
+                // var resp = URL(getNewCopyURL).readText()
                 // if resp != 'false':
                 //     resp = gson.fromJson(resp, Article::class.java)  // now a map
                 //     new_copy = decrypt(resp.get("current_copy")).toString()
