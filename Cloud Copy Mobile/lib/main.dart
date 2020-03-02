@@ -9,17 +9,16 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:password_hash/pbkdf2.dart';
 import 'package:password_hash/salt.dart';
-//import "package:threading/threading.dart";
-
-String email;
-SendPort newIsolateSendPort;
-Isolate newIsolate;
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(new MyApp());
 }
+
+String email;
+SendPort newIsolateSendPort;
+Isolate newIsolate;
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -52,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final String baseURL = 'http://167.99.191.206/';
   String token;
 
-  static void startServiceInPlatform(SendPort callerSendPort) {
+  static startServiceInPlatform(SendPort callerSendPort) {
     ReceivePort newIsolateReceivePort = ReceivePort();
     callerSendPort.send(newIsolateReceivePort.sendPort);
     if (Platform.isAndroid) {
