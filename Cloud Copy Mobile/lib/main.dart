@@ -51,20 +51,16 @@ class _MyHomePageState extends State<MyHomePage> {
   TextEditingController passwordController = new TextEditingController();
   final String baseURL = 'http://167.99.191.206/';
   String token;
-  
 
   static void startServiceInPlatform(SendPort callerSendPort) {
     ReceivePort newIsolateReceivePort = ReceivePort();
     callerSendPort.send(newIsolateReceivePort.sendPort);
-
     if (Platform.isAndroid) {
       const platform = const MethodChannel('com.cloud_copy.monitor');
-      print("starting service");
       platform.invokeMethod("startService");
-      print("started service");
     } else {
       // iOS
-      print('iOS Not implemented yet');
+      debugPrint('iOS Not implemented yet');
     }
   }
 
@@ -80,19 +76,19 @@ class _MyHomePageState extends State<MyHomePage> {
     String password = passwordController.text;
 
     if (email == "") {
-      print("Please enter an email address");
+      debugPrint("Please enter an email address");
     }
     if (password == "") {
-      print("Please enter the password");
+      debugPrint("Please enter the password");
 //      TODO: focus on empty field
     } else {
       var url = baseURL + '/authenticate/';
       var response =
           await http.post(url, body: {'email': email, 'password': password});
       token = response.body;
-      print(token);
+      debugPrint(token);
       if (token == 'false') {
-        print("incorrect email/password");
+        debugPrint("incorrect email/password");
         // update text about invalid email/password
       } else {
         // Update gui to "logging in"
@@ -105,14 +101,12 @@ class _MyHomePageState extends State<MyHomePage> {
           context,
           MaterialPageRoute(builder: (context) => AccountPage()),
         );
-        print("1 2 3");
-        debugPrint("1 2 3");
-        // ReceivePort receivePort = ReceivePort();
-        // newIsolate = await Isolate.spawn(
-        //   startServiceInPlatform,
-        //   receivePort.sendPort,
-        // );
-        // newIsolateSendPort = await receivePort.first;
+        ReceivePort receivePort = ReceivePort();
+        newIsolate = await Isolate.spawn(
+          startServiceInPlatform,
+          receivePort.sendPort,
+        );
+        newIsolateSendPort = await receivePort.first;
       }
     }
   }
