@@ -86,21 +86,20 @@ class _MyHomePageState extends State<MyHomePage> {
       var response =
           await http.post(url, body: {'email': email, 'password': password});
       token = response.body;
-      debugPrint(token);
       if (token == 'false') {
         debugPrint("incorrect email/password");
         // update text about invalid email/password
       } else {
         // Update gui to "logging in"
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AccountPage()),
+        );
         List<int> key = generateKey(password);
         final prefs = await SharedPreferences.getInstance();
         prefs.setString('email', email);
         prefs.setString('token', token);
         prefs.setString('key', base64.encode(key));
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AccountPage()),
-        );
         ReceivePort receivePort = ReceivePort();
         newIsolate = await Isolate.spawn(
           startServiceInPlatform,

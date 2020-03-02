@@ -59,6 +59,7 @@ internal class MyService:Service() {
             newCopy = clipboard?.getPrimaryClip()?.getItemAt(0)?.text.toString()
             // https://abhiandroid.com/programming/volley
             if (currentCopy != newCopy) {
+                println("new copy")
 
                 // TODO: make a post request to share-copy
                 // currentCopy = newCopy
