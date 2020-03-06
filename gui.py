@@ -1,4 +1,5 @@
 import base64
+from contextlib import suppress
 from datetime import datetime
 import json
 import os
@@ -37,16 +38,16 @@ try:
     logged_in = False 
 
     # add the startup stuff here, create a startup shortcut
+    for proc in psutil.process_iter():
+            with suppress(psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                process_name = proc.name()
+                if process_name == 'Cloud Copy.exe': sys.exit()
+
 
     if platform.system() == 'Windows':
         from getpass import getuser
-        import win32api
         import win32com.client
-        import win32event
-        from winerror import ERROR_ALREADY_EXISTS
-        mutex = win32event.CreateMutex(None, False, 'name')
-        last_error = win32api.GetLastError()
-        # if last_error == ERROR_ALREADY_EXISTS: sys.exit()
+        
         user = getuser()
         shortcut_path = f'C:/Users/{user}/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/Cloud Copy.lnk'
         if not os.path.exists(shortcut_path):
@@ -57,7 +58,6 @@ try:
             shortcut.WorkingDirectory = starting_dir
             shortcut.WindowStyle = 1
             shortcut.save()
-
 
     elif platform.system() == 'Mac OS X': pass
         
