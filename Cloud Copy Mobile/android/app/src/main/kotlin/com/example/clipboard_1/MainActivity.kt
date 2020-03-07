@@ -34,10 +34,11 @@ class MainActivity: FlutterActivity() {
     }
 
     private fun startService() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(forService);
-        } else {
-            startService(forService);
-        }
+        startService(forService);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            startForegroundService(forService);
+//        } else {
+//            startService(forService);
+//        }
     }
 }

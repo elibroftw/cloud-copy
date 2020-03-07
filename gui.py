@@ -8,16 +8,18 @@ import sys
 import time
 import traceback
 # import uuid
+import PySimpleGUI as sg
+import requests
+from requests.exceptions import ConnectionError
+from cryptography.fernet import Fernet
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+import pyperclip
+import psutil
 try:
     # TODO: set all data into a .prefs file
-    import PySimpleGUI as sg
-    import requests
-    from requests.exceptions import ConnectionError
-    from cryptography.fernet import Fernet
-    from cryptography.hazmat.backends import default_backend
-    from cryptography.hazmat.primitives import hashes
-    from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-    import pyperclip
+    
 
     sg.theme('DarkBlack')
     BASE_URL = 'http://167.99.191.206/'
@@ -37,13 +39,12 @@ try:
 
     logged_in = False 
 
-    # add the startup stuff here, create a startup shortcut
     for proc in psutil.process_iter():
             with suppress(psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
                 process_name = proc.name()
                 if process_name == 'Cloud Copy.exe': sys.exit()
 
-
+    # create a startup shortcut
     if platform.system() == 'Windows':
         from getpass import getuser
         import win32com.client

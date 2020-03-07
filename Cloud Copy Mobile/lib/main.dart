@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,8 +16,7 @@ void main() async {
 }
 
 String email;
-SendPort newIsolateSendPort;
-Isolate newIsolate;
+SharedPreferences prefs;
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -51,9 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final String baseURL = 'http://167.99.191.206/';
   String token;
 
-  static startServiceInPlatform(SendPort callerSendPort) {
-    ReceivePort newIsolateReceivePort = ReceivePort();
-    callerSendPort.send(newIsolateReceivePort.sendPort);
+  static startServiceInPlatform() {
     if (Platform.isAndroid) {
       const platform = const MethodChannel('com.cloud_copy.monitor');
       platform.invokeMethod("startService");
@@ -95,16 +91,11 @@ class _MyHomePageState extends State<MyHomePage> {
           MaterialPageRoute(builder: (context) => AccountPage()),
         );
         List<int> key = generateKey(password);
-        final prefs = await SharedPreferences.getInstance();
+        prefs = await SharedPreferences.getInstance();
         prefs.setString('email', email);
         prefs.setString('token', token);
         prefs.setString('key', base64.encode(key));
-        ReceivePort receivePort = ReceivePort();
-        newIsolate = await Isolate.spawn(
-          startServiceInPlatform,
-          receivePort.sendPort,
-        );
-        newIsolateSendPort = await receivePort.first;
+        startServiceInPlatform();
       }
     }
   }
@@ -203,8 +194,9 @@ class _AccountPageState extends State<AccountPage> {
 
   void logOut() {
     Navigator.pop(context);
-    newIsolate?.kill(priority: Isolate.immediate);
-    newIsolate = null;
+    prefs.setString('email', "");
+    prefs.setString('token', "");
+    prefs.setString('key', "");
   }
 
   @override

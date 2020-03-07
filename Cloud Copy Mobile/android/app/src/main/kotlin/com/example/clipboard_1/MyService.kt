@@ -1,87 +1,101 @@
 package com.example.clipboard_1;
 
-import android.app.NotificationManager
-import android.app.Service
+import android.app.IntentService
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.annotation.Nullable
-import androidx.core.app.NotificationCompat
 import android.content.SharedPreferences
 import android.content.Context
 import android.content.ClipboardManager
 import java.sql.Timestamp
 import java.sql.Date
 import java.lang.Thread
-import java.security.SecureRandom
-import com.beust.klaxon.JsonObject
 import javax.crypto.Mac
-import javax.crypto.MacSpi
 import javax.crypto.spec.SecretKeySpec
-import javax.crypto.spec.PBEKeySpec
+import kotlin.concurrent.thread
 import com.google.gson.*
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONObject
+//import io.karn
 
 
-//import klaxon.JsonObject
-internal class MyService : Service() {
-    private val BASE_URL = "http://167.99.191.206/"
+internal class MyService : IntentService("ClipboardMonitor") {
+    private val baseURL = "http://167.99.191.206/"
+    private val getNewCopyURL = "${baseURL}newest-copy/?token=${token}"
+    private val sendNewCopyURL = "${baseURL}share-copy/"
     private lateinit var KEY: ByteArray
-    override fun onCreate() {
-        super.onCreate();
+
+    override fun onHandleIntent(intent: Intent?) {
         // what is startForeground?
+        startMonitoring()
+//        thread(start=true, isDaemon=true) {
+//            startMonitoring()
+//        }
+    }
+
+    fun encrypt(text: String): ByteArray {
+        val algorithm = "HmacSHA256"
+        val mac = Mac.getInstance(algorithm)
+        mac.init(SecretKeySpec(KEY, algorithm))
+        return mac.doFinal(text.toByteArray())
+    }
+
+    fun decrypt(text: String): ByteArray {
+        val algorithm = "HmacSHA256"
+        val mac = Mac.getInstance(algorithm)
+        mac.init(SecretKeySpec(KEY, algorithm))
+        return mac.doFinal(text.toByteArray())
+    }
+
+    fun startMonitoring() {
         val mPrefs = getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
-//        val mPrefs = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-//        val mPrefs = activity?.getPreferences(Context.MODE_PRIVATE)
         val email = mPrefs.getString("flutter.email", "")
         val token = mPrefs.getString("flutter.token", "")
         KEY = mPrefs.getString("flutter.key", "").toByteArray()
-
         val gson = Gson()
         val queue = Volley.newRequestQueue(this)
-        val getNewCopyURL = "${BASE_URL}newest-copy/?token=${token}"
-        val sendNewCopyURL = "${BASE_URL}share-copy/"
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
-        var currentCopy = clipboard?.getPrimaryClip()?.getItemAt(0)?.text.toString()
         var lastUpdate = Date(System.currentTimeMillis())
         println("lastUpdate = " + lastUpdate) // TODO: better format
+        var currentCopy = ""
         var newCopy = ""
         // ClipData.newPlainText("text", et_copy_text.text);
-//        myClipboard?.setPrimaryClip(myClip);
-        while (true) {
+        // myClipboard?.setPrimaryClip(myClip);
+        while (mPrefs.getString("flutter.email", "") == email) {
             // TODO: try catch no internet error
-            newCopy = clipboard?.getPrimaryClip()?.getItemAt(0)?.text.toString()
-            println(newCopy)
+            val temp = clipboard?.getPrimaryClip()?.getItemAt(0)?.text
+            if (temp != null) newCopy = temp.toString()
+            // println(newCopy)
             // https://abhiandroid.com/programming/volley
-            if (currentCopy != newCopy) {
-                println("send copy")
-                val jsonBody = JSONObject()
-                jsonBody.put("token", token)
-                jsonBody.put("contents", encrypt(newCopy))
-                val jsonRequest = JsonObjectRequest(Request.Method.POST, sendNewCopyURL, jsonBody,
-                        null, Response.ErrorListener {
-                    fun onErrorResponse(error: VolleyError?) {
-                        // TODO: handle no internet here
-                    }
-                })
-                queue.add(jsonRequest)
-
-                // TODO: make a post request to share-copy
+            if (newCopy != currentCopy) {
+                println("send copy: ${newCopy}")
+                sendCopy(newCopy)
+                currentCopy = newCopy
+                println("set new copy")
+                val gson = Gson()
+                val httpClient = HttpClientBuilder.create().build()
+                val post = HttpPost(sendNewCopyURL)
+                val map = HashMap<String, String>()
+                map.put("token", token)
+                map.put("content", encrypt(newCopy))
+                post.setEntity(JSONobject(map).toString())
+                post.setHeader("Content-type", "application/json")
+                val response = httpClient.execute(post)
+                println(response.text)
                 // currentCopy = newCopy
                 // val stringRequest = StringRequest(Request.Method.POST, sendNewCopyURL,
                 // post(sendNewCopyURL, data=mapOf("token" to token, "contents" to encrypt(newCopy)))
             } else {
                 val stringRequest = StringRequest(Request.Method.GET, getNewCopyURL,
-                        Response.Listener<String> { response ->
+                        Response.Listener { response ->
                             if (response != "false") {
                                 val dataJSON = gson.fromJson(response, JSONObject::class.java)
                                 var newCopy = dataJSON.get("contents")
@@ -115,21 +129,6 @@ internal class MyService : Service() {
             }
             Thread.sleep(1500)
         }
-        println("end?")
-    }
-
-    fun encrypt(text: String): ByteArray {
-        val algorithm = "HmacSHA256"
-        val mac = Mac.getInstance(algorithm)
-        mac.init(SecretKeySpec(KEY, algorithm))
-        return mac.doFinal(text.toByteArray())
-    }
-
-    fun decrypt(text: String): ByteArray {
-        val algorithm = "HmacSHA256"
-        val mac = Mac.getInstance(algorithm)
-        mac.init(SecretKeySpec(KEY, algorithm))
-        return mac.doFinal(text.toByteArray())
     }
 
     @Nullable
