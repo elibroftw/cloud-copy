@@ -2,6 +2,7 @@ wheel
 flask
 flask-compress
 pymongo
+mysql
 cryptography
 pyperclip
 python-dotenv

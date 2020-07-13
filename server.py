@@ -5,11 +5,6 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 import base64
 import bcrypt
-# from cryptography.fernet import Fernet
-# from cryptography.hazmat.backends import default_backend
-# from cryptography.hazmat.primitives import hashes
-# from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-# import uuid
 import os
 import secrets
 from datetime import datetime
@@ -27,6 +22,7 @@ client = MongoClient()
 db = client.cloud_copy
 users = db.users
 tokens = db.tokens
+
 # user structure
 sample_user = {'email': 'cool_guy123@cool_domain.com',
                'devices': {'MAC': {'token': 'some-token',
