@@ -12,7 +12,6 @@
         <ul class="main-nav">
             <li><a id="nav-about" href="#about">About</a> </li>
             <li><a id="nav-download" href="#download">Download</a> </li>
-
         </ul>
     </div>
     <div class="hero">
@@ -21,11 +20,9 @@
             <img id="logo" src="/static/images/logo.png">
             Cloud Copy
         </h1>
-        <button id="demo-btn" class="btn btn-one" onclick="openModal()">
-            Watch Demo
-        </button>
+        <button id="demo-btn" class="btn-one" onclick="openModal()">Watch Demo</button>
         <div id="modal" class="modal">
-            <iframe allowfullscreen width=66% height=75% class="modal-content" src="https://www.youtube-nocookie.com/embed/k_FxkNObDYQ?enablejsapi=1&version=3&playerapiid=ytplayer"></iframe>
+            <iframe allowfullscreen width=66% height=75% class="modal-content" src="//www.youtube-nocookie.com/embed/k_FxkNObDYQ?enablejsapi=1&version=3&playerapiid=ytplayer"></iframe>
         </div>
     </div>
 
@@ -34,51 +31,53 @@
         <div class="background">
             <div class="transbox">
                 <p>
-                    Cloud Copy is a novel solution to clipboard management. It allows you to copy something on
-                    one
-                    device, and paste it directly into another, seamlessly.
-                    <br> <br>
+                    Cloud Copy is a novel solution to clipboard management. It allows you to send copy text/content on
+                    one device, and paste it directly into another, seamlessly.
+                    <br><br>
                     Cloud Copy differentiates itself from other clipboard applications by not depending on
                     Chrome, or any browser you use. Versatile accross all platforms, connect
                     all your devices with a single account.
+                    <br><br>
+                    Made by Abdullah Hadi, Elijah Lopez, Gijsson Yeo, and Kritik Kaushal. <a href="//github.com/elibroftw/cloud-copy">Source code</a>.
                 </p>
             </div>
         </div>
     </div>
     </div>
     <div id='download'>
-        <h3>Download</h3>
-        <div id="windows">
-            <hX>Windows</hX>
-            <ul>
-                <a class="dl-link" href="https://github.com/elibroftw/cloud-copy/releases/download/v0.1.2a/Cloud.Copy.exe">64 bit</a><br>
-                <a class="dl-link" href="">32 bit</a>
-            </ul>
-        </div>
-        <div id="mac">
-            <hX>Macintosh</hX>
-            <ul>
-                <a class="dl-link" href="">64 bit</a><br>
-                <a class="dl-link" href="">32 bit</a>
-                
-            </ul>
-        </div>
-        <div id="linux">
-            <hX>Linux</hX>
-            <ul>
-                <a class="dl-link" href="">64 bit</a><br>
-                <a class="dl-link" href="">32 bit</a>
-            </ul>
-        </div>
-        <div id="mobile">
-            <hX>Mobile</hX>
-            <ul>
-                <a class="dl-link" href="">Google Play</a><br>
-                <a class="dl-link" href="">App Store</a>
-            </ul>
+        <h2>Download</h2>
+        <div id="downloads">
+            <div id="windows">
+                <hX>Windows</hX>
+                <ul>
+                    <li><a class="dl-link" href="//github.com/elibroftw/cloud-copy/releases/download/v0.1.2a/Cloud.Copy.exe">64 bit</a></li>
+                    <li><a class="dl-link" href="">32 bit</a></li>
+                </ul>
+            </div>
+            <div id="mac">
+                <hX>Macintosh</hX>
+                <ul>
+                    <li><a class="dl-link" href="">64 bit</a></li>
+                    <li><a class="dl-link" href="">32 bit</a></li>
+                </ul>
+            </div>
+            <div id="linux">
+                <hX>Linux</hX>
+                <ul>
+                    <li><a class="dl-link" href="">64 bit</a></li>
+                    <li><a class="dl-link" href="">32 bit</a></li>
+                </ul>
+            </div>
+            <div id="mobile">
+                <hX>Mobile</hX>
+                <ul>
+                    <li><a class="dl-link" href="">Google Play</a></li>
+                    <li><a class="dl-link" href="">App Store</a></li>
+                </ul>
+            </div>
         </div>
     </div>
-    
+
     <button onclick="topFunction()" id="btn-top" title="Go to top">
         <svg class="arrow up" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="5 0 50 80" xml:space="preserve">
             <polyline fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" points="
@@ -87,25 +86,29 @@
     </button>
 
     <script>
-        var modal = document.getElementById("modal");
-        var ytVid = document.getElementsByTagName('iframe')[0];
-        var toTopBtn = document.getElementById("btn-top");
+        const modal = document.getElementById('modal');
+        const ytVid = document.getElementsByTagName('iframe')[0];
+        const toTopBtn = document.getElementById('btn-top');
 
         function closeModal() {
-            modal.style.display = "none";
+            modal.style.display = 'none';
             ytVid.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
             window.onclick = null;
             document.onkeydown = null;
         }
 
         function openModal() {
-            modal.style.display = "block";
+            if (document.body.clientWidth < 690) {
+                // on mobile so just open the video
+                return window.open('https://youtube.com/watch?v=k_FxkNObDYQ');
+            }
+            modal.style.display = 'block';
             ytVid.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
             // maybe focus on iframe?
 
             // When the user clicks off the modal or presses Esc, close the modal
             document.onkeydown =  function(e) {
-                if (e.key === "Escape") {
+                if (e.key === 'Escape') {
                     closeModal();
                 }
             }
@@ -118,9 +121,9 @@
 
         function scrollFunction() {
             if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                toTopBtn.style.display = "block";
+                toTopBtn.style.display = 'block';
             } else {
-                toTopBtn.style.display = "none";
+                toTopBtn.style.display = 'none';
             }
         }
 
@@ -128,7 +131,7 @@
         function topFunction() {
             document.body.scrollTop = 0;
             document.documentElement.scrollTop = 0;
-            document.getElementById("demo-btn").focus();
+            document.getElementById('demo-btn').focus();
         }
 
         // When the user scrolls down 20px from the top of the document, show the button
